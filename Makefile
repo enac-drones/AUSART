@@ -9,7 +9,7 @@ redirect: default
 #--
 # configuration
 exe := gcs-ppz
-srcs_sma := src/main.sma src/PanAndZoom.sma src/AircraftManager.sma src/AircraftDrone.sma src/SectorManager.sma src/Sector.sma
+srcs_sma := src/main.sma src/PanAndZoom.sma src/AircraftManager.sma src/AircraftDrone.sma src/SectorManager.sma src/Sector.sma src/Dialog.sma
 #src/AircraftManager.sma src/SectorManager.sma
 
 #djnn_libs := gui display base core

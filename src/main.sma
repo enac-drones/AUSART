@@ -7,6 +7,7 @@ use display
 import PanAndZoom
 import AircraftManager
 import SectorManager
+import Dialog
 
 
 _native_code_
@@ -67,6 +68,10 @@ Component root {
 		// ausart_back_end DELETE_AC ac_id
 	}
 
+	// STUFF ABOVE PAN AND ZOOM
+
+	Dialog dialog (20, 20)
+
 	// PAN AND ZOOM //
 
 	FillColor _ (255, 255, 255)
@@ -101,7 +106,7 @@ Component root {
 
 	// SECTOR MANAGER //
 
-	SectorManager sector_manager (ivybus)
+	SectorManager sector_manager (f, ivybus, dialog)
 
 	// DEBUG //
 
