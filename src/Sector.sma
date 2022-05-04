@@ -26,7 +26,10 @@ Sector (Process _sector_id, Process _ivybus, Process frame, Process dialog){
 	_ivybus.in.point_area_init[2] => new_point_lat
 	_ivybus.in.point_area_init[3] => new_point_lon
 
+	////////////////////
 	// REPRESENTATION //
+	////////////////////
+
 	FillOpacity fo (0)
 	FillColor fc (DarkSlateGrey)
 	OutlineColor out_color (210, 210, 210)
@@ -52,21 +55,28 @@ Sector (Process _sector_id, Process _ivybus, Process frame, Process dialog){
 	// MANAGE USER INTERACTIONS ON SECTOR //
 	// sector_poly.press -> {"CLICK ON SECTOR " + sector_id =: log2.input}
 
+	
 	FSM sect_repr {
 		State not_selected {
 			0.0001 =: out_width.width
 			0 =: fo.a
-			|->dialog.hide
+			|-> dialog.hide
+			//"idle" =: strikethrough.state
 		}
 		State selected {
 			0.0008 =: out_width.width
 			1 =: fo.a
 			|-> dialog.show
+			//"striken" =: strikethrough.state
 		}
 		not_selected -> selected (sector_poly.press)
 		selected -> not_selected (sector_poly.press)
 	}
 
-	sect_repr.state -> {"STATE CHANGED FOR " + sector_id + ", NEW STATE : " + sect_repr.state =: log3.input}
+	sect_repr.state -> {"STATE CHANGED FOR " + sector_id + ", NEW STATE : " + sect_repr.state =: log2.input}
+
+	
+
+
 
 }
