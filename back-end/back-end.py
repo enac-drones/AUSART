@@ -13,6 +13,8 @@ from shapely.geometry import Point
 from shapely.geometry import shape
 from shapely.geometry.polygon import Polygon
 
+from sector import Sector
+
 
 class BackEnd():
 
@@ -140,10 +142,8 @@ class BackEnd():
 
 			for json_sector in data['features'][1:]:
 
-				sect_id = json_sector['id']
+				sect_name = json_sector['id']
 				coordinates = json_sector['coordinates']
-				sect = Sector (sect_id, coordinates, None, json_sector)
-				self.sectors.append(sect)
 
 				msg = "ausart_back_end AREA_INIT %s" % sect_id
 				IvySendMsg(msg)
@@ -154,17 +154,10 @@ class BackEnd():
 					msg_point = 'ausart_back_end POINT_AREA_INIT %s %s %s' % (sect_id, point_lat, point_lon)
 					IvySendMsg(msg_point)
 
+				sect = Sector ("XXXXXXX", sect_id, "no_restriction", coordinates[0])
+				self.sectors.append(sect)
 
 
-
-
-class Sector():
-
-	def __init__(self, _id, _geometry, _param, _json_coords):
-		self.id = _id
-		self.geometry = _geometry
-		self.param = _param
-		self.json_coords = _json_coords
 
 
 def main():
