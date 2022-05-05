@@ -1,13 +1,13 @@
 #!/usr/bin/python3
 
 import time
-
-from ivy.std_api import *
-
 import requests
 import json
-
 import threading
+import asyncio
+import websockets
+
+from ivy.std_api import *
 
 from shapely.geometry import Point
 from shapely.geometry import shape
@@ -28,12 +28,28 @@ class BackEnd():
 
 		self.sectors = []
 
+		## IVY ##
 		IvyInit("AUSART_BACK_END")
 		IvyStart()
 		IvyBindMsg(self.send_sectors, "FRONT_END_READY")
 
+		## INIT FUNCTIONS ##
 		self.log_in_to_UCIS()
 
+		## SOCKETS ##
+		#asyncio.run(self.main())
+
+
+	async def process(message):
+		print(message)
+
+
+	async def main(self):
+		headers = {"Authorization":"Bearer " + self.token}
+		print ("\n headers ", headers)
+		async with websockets.connect("wss://wss.ucis.ssghosting.net/dops", extra_headers=headers) as websocket:
+			async for message in websocket:
+				await process(message)
 
 
 
@@ -55,7 +71,8 @@ class BackEnd():
 			'flight-planning.dops.cancel.write flight-planning.dops.close.write ' + \
 			'flight-planning.dops.reject.write flight-planning.dops.submit.write ' + \
 			'geoawareness.uaszones.read geoawareness.uaszones.write ' + \
-			'geoawareness.uaszones.submit.write'
+			'geoawareness.uaszones.submit.write notification.flight-planning.read ' + \
+			'notification.geoawareness.read'
 		}
 
 		response = requests.post(url, headers=headers, data=data)
@@ -117,7 +134,7 @@ class BackEnd():
 	def send_sectors(self, agent):
 		# reads and send sectors defined in json file #
 
-		with open('geojson_areas.json') as json_file:
+		with open('../conf/areas/geojson_areas_v2.json') as json_file:
 
 			data = json.load(json_file)
 
@@ -131,7 +148,7 @@ class BackEnd():
 				msg = "ausart_back_end AREA_INIT %s" % sect_id
 				IvySendMsg(msg)
 
-				for point in coordinates[0][:-1]:
+				for point in coordinates[0]:
 					point_lat = point[1]
 					point_lon = point[0]
 					msg_point = 'ausart_back_end POINT_AREA_INIT %s %s %s' % (sect_id, point_lat, point_lon)
