@@ -33,10 +33,12 @@ class BackEnd():
 		## IVY ##
 		IvyInit("AUSART_BACK_END")
 		IvyStart()
-		IvyBindMsg(self.send_sectors, "FRONT_END_READY")
+		IvyBindMsg(self.send_sectors_to_front, "FRONT_END_READY")
 
 		## INIT FUNCTIONS ##
+		self.load_sectors('../conf/areas/geojson_areas_v2.json')
 		self.log_in_to_UCIS()
+		self.post_sectors_to_ucis()
 
 		## SOCKETS ##
 		#asyncio.run(self.main())
@@ -52,6 +54,7 @@ class BackEnd():
 		async with websockets.connect("wss://wss.ucis.ssghosting.net/dops", extra_headers=headers) as websocket:
 			async for message in websocket:
 				await process(message)
+
 
 
 
@@ -106,12 +109,12 @@ class BackEnd():
 
 	def thread_refresh(self, expires_in):
 		## Creates a new thread to auto refresh the access token ##
-		while True:
-			#print("\nRefresh thread started")
-			time.sleep(expires_in - 50)
-			#print("\nAutomatic token refresh")
 
-			url = 'https://www.ucis.ssghosting.net/auth/realms/UCIS/protocol/openid-connect/token'
+		url = 'https://www.ucis.ssghosting.net/auth/realms/UCIS/protocol/openid-connect/token'
+		
+		while True:
+
+			time.sleep(expires_in - 50)
 
 			data = {
 				'grant_type': 'refresh_token',
@@ -122,21 +125,22 @@ class BackEnd():
 			response = requests.post(url, data=data)
 
 			if response.status_code == 200:
+
 				print("\nAutomatic token refresh success")
-				#print(response.text)
 				self.refresh_token = response.json()["refresh_token"]
 				self.token = response.json()["refresh_token"]
 
 			else:
+
 				print("\nFailed to refresh token")
 
 
 
 
-	def send_sectors(self, agent):
-		# reads and send sectors defined in json file #
+	def load_sectors(self, path):
+		# loads sectors from json file #
 
-		with open('../conf/areas/geojson_areas_v2.json') as json_file:
+		with open(path) as json_file:
 
 			data = json.load(json_file)
 
@@ -145,17 +149,39 @@ class BackEnd():
 				sect_name = json_sector['id']
 				coordinates = json_sector['coordinates']
 
-				msg = "ausart_back_end AREA_INIT %s" % sect_id
-				IvySendMsg(msg)
-
-				for point in coordinates[0]:
-					point_lat = point[1]
-					point_lon = point[0]
-					msg_point = 'ausart_back_end POINT_AREA_INIT %s %s %s' % (sect_id, point_lat, point_lon)
-					IvySendMsg(msg_point)
-
-				sect = Sector ("XXXXXXX", sect_id, "no_restriction", coordinates[0])
+				sect = Sector ("XXXXXXX", sect_name, "no_restriction", coordinates[0])
 				self.sectors.append(sect)
+
+
+
+
+	def send_sectors_to_front(self, agent):
+		# reads and sends sectors to front #
+
+		for sect in self.sectors:
+
+			msg = "ausart_back_end AREA_INIT %s" % sect.name
+			IvySendMsg(msg)
+
+			for point in sect.coords[0]:
+				point_lat = point[1]
+				point_lon = point[0]
+				msg_point = 'ausart_back_end POINT_AREA_INIT %s %s %s' % (sect.name, point_lat, point_lon)
+				IvySendMsg(msg_point)
+
+
+
+
+	def post_sectors_to_ucis(self):
+
+		for sect in self.sectors:
+
+			sect.post_sector_min_info(self.headers)
+
+
+
+
+
 
 
 
