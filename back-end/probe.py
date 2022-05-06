@@ -3,6 +3,7 @@
 import requests
 import asyncio
 from websockets import connect
+import threading
 
 def login(client_id: str, username: str, password: str):
     payload = {
@@ -20,7 +21,7 @@ def login(client_id: str, username: str, password: str):
 async def process(message):
     print(message)
 
-async def main():
+async def probe_dops():
     token=login("d7d08988-97ba-44af-a7e1-afab0524510b", "cconan", "wac_2022")
     headers = {
         "Authorization":"Bearer " + token
@@ -30,4 +31,23 @@ async def main():
         async for message in websocket:
             await process(message)
 
-asyncio.run(main())
+async def probe_geoawareness():
+    token=login("d7d08988-97ba-44af-a7e1-afab0524510b", "cconan", "wac_2022")
+    headers = {
+        "Authorization":"Bearer " + token
+    }
+    print(token)
+    async with connect("wss://wss.ucis.ssghosting.net/geoawareness", extra_headers=headers) as websocket:
+        async for message in websocket:
+            await process(message)
+
+def fun_thread_dops():
+    asyncio.run(probe_dops())
+
+def fun_thread_geoawareness():
+    asyncio.run(probe_geoawareness())
+
+thread_dops = threading.Thread(target=fun_thread_dops, daemon=False)
+thread_geoawareness = threading.Thread(target=fun_thread_geoawareness, daemon=False)
+thread_dops.start()
+thread_geoawareness.start()
