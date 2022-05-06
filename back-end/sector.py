@@ -23,7 +23,7 @@ class Sector():
 		self.type = "customized"
 		self.restriction_condition = None # empty unless self.restriction = conditional
 		self.region = 31000
-		self.country = "FRA"
+		self.country = "FRX"
 		self.reason = "air_traffic"
 		self.other_reason_info = None
 		self.regulation_exemption = "no"
@@ -139,13 +139,20 @@ class Sector():
 				"upper_vertical_reference": self.upper_vertical_reference,
 				"horizontal_projection": 
 					{
-						"polygon": {
-							"type": "Polygon",
-							"coordinates": 
-							[
-								[[0, 0, 0], [1, 1, 0]]
-							]
-						},
+						"polygon": None, 
+						"circle": {
+							"type": "Feature",
+							"geometry": {
+								"type": "Point", 
+								"coordinates": [1.44372, 43,601940]
+							},
+							"properties": {
+								"radius": {
+									"value": 2000.0,
+									"units": "M"
+								}
+							}
+						}
 					}
 				}
 			],

@@ -174,9 +174,13 @@ class BackEnd():
 
 	def post_sectors_to_ucis(self):
 
-		for sect in self.sectors:
+		# for sect in self.sectors:
 
-			sect.post_sector_min_info(self.headers)
+		# 	sect.post_sector_min_info(self.headers)
+
+		## FOR EXPE ONLY SEND 1st SECTOR ##
+		sect = self.sectors[0]
+		sect.post_sector_min_info(self.headers)
 
 
 
