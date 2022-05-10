@@ -14,6 +14,7 @@ from shapely.geometry import shape
 from shapely.geometry.polygon import Polygon
 
 from sector import Sector
+from flight_plan import FlightPlan
 
 
 class BackEnd():
@@ -29,6 +30,7 @@ class BackEnd():
 		self.headers = None
 
 		self.sectors = []
+		self.flight_plans = []
 
 		## IVY ##
 		IvyInit("AUSART_BACK_END")
@@ -43,18 +45,36 @@ class BackEnd():
 		## SOCKETS ##
 		#asyncio.run(self.main())
 
+		thread_notif_dops = threading.Thread(target=self.thread_listen_dops, daemon=True)
+		thread_notif_dops.start()
 
-	async def process(message):
-		print(message)
 
 
-	async def main(self):
-		headers = {"Authorization":"Bearer " + self.token}
+
+	## SOCKET FUNCS ##
+	async def process_dops(self, _message):
+		print(_message)
+		message = json.loads(_message)
+		dop_id = message["dop_uuid"]
+		if message["notification_type"] == "filed":
+			print("NEW FP RECEIVED : ", dop_id)
+			self.add_new_fp(dop_id)
+		else:
+			pass
+
+
+	async def listen_dops(self):
+		headers = {
+			"Authorization":"Bearer " + self.token
+		}
 		print ("\n headers ", headers)
 		async with websockets.connect("wss://wss.ucis.ssghosting.net/dops", extra_headers=headers) as websocket:
 			async for message in websocket:
-				await process(message)
+				await self.process_dops(message)
 
+
+	def thread_listen_dops(self):
+		asyncio.run(self.listen_dops())
 
 
 
@@ -185,6 +205,22 @@ class BackEnd():
 
 
 
+	def add_new_fp(self, fp_id):
+		# adds new fp from UCIS to local database #
+
+		url = "https://www.ucis.ssghosting.net/v1/dops/"
+
+		params = {
+			"dop_uuids": [fp_id]
+			}
+
+		response = requests.get(url, headers=self.headers, params=params)
+
+		print(response.text)
+
+		flight_plan = FlightPlan(response.json()[0])
+
+		self.flight_plans.append(flight_plan)
 
 
 
