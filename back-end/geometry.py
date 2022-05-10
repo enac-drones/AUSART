@@ -29,8 +29,9 @@ class Geometry():
 			elif json["outline_polygon"] is not None:
 				print("CREATING A POLYGON GEOMETRY")
 				if json["volume"]["outline_polygon"]["type"] == "Polygon":
+					self.type = "polygon"
 					for coords in json["outline_polygon"]["coordinates"]:
-						self.coords.append([coords[0], coords[1]])
+						self.coords.append([coords[1], coords[0]])
 				else:
 					print("UNSUPPORTED POLYGON TYPE")
 		elif json["geospatialOccupancyType"] == "Trajectory4D":

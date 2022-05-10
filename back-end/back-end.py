@@ -53,12 +53,13 @@ class BackEnd():
 
 	## SOCKET FUNCS ##
 	async def process_dops(self, _message):
-		print("NEW DOP : " _message)
+		print("NEW DOP : ", _message)
 		message = json.loads(_message)
 		dop_id = message["dop_uuid"]
 		if message["notification_type"] == "filed":
 			print("NEW FP RECEIVED : ", dop_id)
 			self.add_new_fp(dop_id)
+			self.send_fp_to_front(dop_id)
 		else:
 			pass
 
@@ -183,7 +184,7 @@ class BackEnd():
 			msg = "ausart_back_end AREA_INIT %s" % sect.name
 			IvySendMsg(msg)
 
-			for point in sect.coords[0]:
+			for point in sect.coords:
 				point_lat = point[1]
 				point_lon = point[0]
 				msg_point = 'ausart_back_end POINT_AREA_INIT %s %s %s' % (sect.name, point_lat, point_lon)
@@ -222,6 +223,26 @@ class BackEnd():
 
 		self.flight_plans.append(flight_plan)
 
+
+
+	def send_fp_to_front(self, fp_id):
+
+		flight_plan = next(fp for fp in self.flight_plans if fp.uuid == fp_id)
+
+		msg = "ausart_back_end NEW_FP %s" % fp_id
+		IvySendMsg(msg)
+
+		for geometry in flight_plan.geometries:
+			if geometry.type == "circle":
+				msg = "ausart_back_end NEW_FP_SECTION_CIRCLE %s %s %s %s %s" \
+					% (fp_id, geometry.id, geometry.center_lat, geometry.center_lon, geometry.radius)
+				IvySendMsg(msg)
+			elif geometry.type == "polygon":
+				msg = "ausart_back_end NEW_FP_SECTION_POLYGON %s %s" % (fp_id, geometry.id)
+				IvySendMsg(msg)
+				for coord in geometry.coords:
+					msg = "ausart_back_end NEW_FP_SECTION_POLYGON_POINT %s %s %s %s %s" \
+						% (fp_id, geometry.id, coord[0], coord[1]) 
 
 
 

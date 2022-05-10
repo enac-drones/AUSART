@@ -7,6 +7,7 @@ use display
 import PanAndZoom
 import AircraftManager
 import SectorManager
+import FlightPlanManager
 import Dialog
 import VFRPoint
 import Heliport
@@ -68,12 +69,20 @@ Component root {
 		// ausart_back_end AREA_INIT area_id 
 		String point_area_init ("ausart_back_end POINT_AREA_INIT (\\S*) (\\S*) (\\S*)")
 		// ausart_back_end POINT_AREA_INIT area_id point_lat point_lon
-		String new_ac ("ausart_back_end NEW_AC (\\S*)")
+		// String new_ac ("ausart_back_end NEW_AC (\\S*)")
 		// ausart_back_end NEW_AC ac_id
-		String update_ac ("ausart_back_end UPDATE_AC (\\S*) (\\S*) (\\S*) (\\S*)")
+		// String update_ac ("ausart_back_end UPDATE_AC (\\S*) (\\S*) (\\S*) (\\S*)")
 		// ausart_back_end UPDATE_AC ac_id lat lon current_sector
-		String delete_ac ("ausart_back_end DELETE_AC (\\S*)")
+		// String delete_ac ("ausart_back_end DELETE_AC (\\S*)")
 		// ausart_back_end DELETE_AC ac_id
+		String new_flight_plan ("ausart_back_end NEW_FP (\\S*)")
+		// ausart_back_end NEW_FP fp_id
+		String new_flight_plan_section_polygon ("ausart_back_end NEW_FP_SECTION_POLYGON (\\S*) (\\S*)")
+		// ausart_back_end NEW_FP_SECTION_POLYGON fp_id section_id
+		String new_flight_plan_section_circle ("ausart_back_end NEW_FP_SECTION_CIRCLE (\\S*) (\\S*) (\\S*) (\\S*) (\\S*)")
+		// ausart_back_end NEW_FP_SECTION_CIRCLE fp_id section_id center_lat center_lon radius
+		String new_flight_plan_section_polygon_point ("ausart_back_end NEW_FP_SECTION_POLYGON_POINT (\\S*) (\\S*) (\\S*) (\\S*)")
+		// ausart_back_end NEW_FP_POLY_POINT fp_id section_id point_lat point_lon
 	}
 
 	/////////////////
@@ -108,14 +117,12 @@ Component root {
 	"PAN : X = " + pz.xpan + " / Y = " + pz.ypan =:> pan_val.text
 	"MOUSE : X = " + mouse_x + " / Y = " + mouse_y =:> mouse_val.text
 
-	Scaling correct_widthening (0.8, 1, 1.36389, -43.62896)
-
 	//////////////////
 	// MAP FEATURES //
 	//////////////////
+	Scaling correct_widthening (0.8, 1, 1.36389, -43.62896)
 
 	Component map_features {
-
 		// TOULOUSE 1.2 TMA //
 		Component toulouse_1_2_tma {
 			FillColor _ (250, 250, 250)
@@ -406,6 +413,12 @@ Component root {
 	////////////////////
 
 	SectorManager sector_manager (f, ivybus, dialog)
+	
+	/////////////////////////
+	// FLIGHT PLAN MANAGER //
+	/////////////////////////
+
+	FlightPlanManager flight_plan_manager (ivybus)
 
 	// DEBUG //
 
