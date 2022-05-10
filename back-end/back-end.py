@@ -40,7 +40,7 @@ class BackEnd():
 		## INIT FUNCTIONS ##
 		self.load_sectors('../conf/areas/geojson_areas_v2.json')
 		self.log_in_to_UCIS()
-		self.post_sectors_to_ucis()
+		#self.post_sectors_to_ucis()
 
 		## SOCKETS ##
 		#asyncio.run(self.main())
@@ -53,7 +53,7 @@ class BackEnd():
 
 	## SOCKET FUNCS ##
 	async def process_dops(self, _message):
-		print(_message)
+		print("NEW DOP : " _message)
 		message = json.loads(_message)
 		dop_id = message["dop_uuid"]
 		if message["notification_type"] == "filed":
@@ -101,11 +101,11 @@ class BackEnd():
 		}
 
 		response = requests.post(url, headers=headers, data=data)
-		print("\nAuthentifying")
+		#print("\nAuthentifying")
 
 		if response.status_code == 200:
-			print("\nAuthentified successfully")
-			print(response.text)
+			#print("\nAuthentified successfully")
+			#print(response.text)
 			self.token = response.json()["access_token"]
 			self.refresh_token = response.json()["refresh_token"]
 
