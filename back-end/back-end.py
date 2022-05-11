@@ -241,8 +241,9 @@ class BackEnd():
 				msg = "ausart_back_end NEW_FP_SECTION_POLYGON %s %s" % (fp_id, geometry.id)
 				IvySendMsg(msg)
 				for coord in geometry.coords:
-					msg = "ausart_back_end NEW_FP_SECTION_POLYGON_POINT %s %s %s %s %s" \
-						% (fp_id, geometry.id, coord[0], coord[1]) 
+					msg = "ausart_back_end NEW_FP_SECTION_POLYGON_POINT %s %s %s %s" \
+						% (fp_id, geometry.id, coord[1], coord[0]) 
+					IvySendMsg(msg)
 
 
 

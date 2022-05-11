@@ -26,11 +26,11 @@ class Geometry():
 				self.center_lon = json["volume"]["outline_circle"]["geometry"]["coordinates"][0]
 				self.center_lat = json["volume"]["outline_circle"]["geometry"]["coordinates"][1]
 				self.radius = json["volume"]["outline_circle"]["properties"]["radius"]["value"]
-			elif json["outline_polygon"] is not None:
+			elif json["volume"]["outline_polygon"] is not None:
 				print("CREATING A POLYGON GEOMETRY")
 				if json["volume"]["outline_polygon"]["type"] == "Polygon":
 					self.type = "polygon"
-					for coords in json["outline_polygon"]["coordinates"]:
+					for coords in json["volume"]["outline_polygon"]["coordinates"][0]:
 						self.coords.append([coords[1], coords[0]])
 				else:
 					print("UNSUPPORTED POLYGON TYPE")
