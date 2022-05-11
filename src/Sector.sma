@@ -6,7 +6,7 @@ use display
 
 
 _define_
-Sector (Process _sector_id, Process _ivybus, Process frame, Process dialog){
+Sector (Process _sector_id, Process _ivybus, Process frame){
 
 	TextPrinter log 
 	TextPrinter log2
@@ -60,14 +60,10 @@ Sector (Process _sector_id, Process _ivybus, Process frame, Process dialog){
 		State not_selected {
 			0.0001 =: out_width.width
 			0 =: fo.a
-			|-> dialog.hide
-			//"idle" =: strikethrough.state
 		}
 		State selected {
 			0.0008 =: out_width.width
 			1 =: fo.a
-			|-> dialog.show
-			//"striken" =: strikethrough.state
 		}
 		not_selected -> selected (sector_poly.press)
 		selected -> not_selected (sector_poly.press)
