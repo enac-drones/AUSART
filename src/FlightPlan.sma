@@ -42,7 +42,12 @@ import PolygonGeometry
 	////////////////////
 
 	FillColor fc (Yellow)
-	List geometries 
+	List geometries
+
+	// JUST FOR DEV PROCESS //
+	addChildrenTo geometries {
+		Circle _ (1.44372, -43.601940, 0.000036)
+	}
 
 	// KEEP ONLY MESSAGES ADRESSED TO THIS FLIGHT PLAN //
 	TextComparator tc_fp_id_poly (id, "")

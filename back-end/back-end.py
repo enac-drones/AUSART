@@ -39,14 +39,14 @@ class BackEnd():
 
 		## INIT FUNCTIONS ##
 		self.load_sectors('../conf/areas/geojson_areas_v2.json')
-		self.log_in_to_UCIS()
+		# self.log_in_to_UCIS()
 		#self.post_sectors_to_ucis()
 
 		## SOCKETS ##
 		#asyncio.run(self.main())
 
-		thread_notif_dops = threading.Thread(target=self.thread_listen_dops, daemon=True)
-		thread_notif_dops.start()
+		#thread_notif_dops = threading.Thread(target=self.thread_listen_dops, daemon=True)
+		#thread_notif_dops.start()
 
 
 
