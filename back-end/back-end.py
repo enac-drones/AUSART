@@ -48,6 +48,49 @@ class BackEnd():
 		#thread_notif_dops = threading.Thread(target=self.thread_listen_dops, daemon=True)
 		#thread_notif_dops.start()
 
+		## add flight plan for dev process ##
+		data = {
+			"uuid": "fake-uuid-for-test",
+			"expected_start": "2025-01-01T00:00:00Z",
+			"expected_end": "2025-01-01T18:00:00Z",
+			"status": "filed",
+			"status_detail": "no details",
+			"metadata": "fake_metadata",
+			"geospatial_occupancy": [{
+				"geospatialOccupancyType": "Volume4D",
+				"volume": {
+					"outline_polygon": None, 
+					"outline_circle": {
+						"type": "Feature",
+						"geometry": {
+							"type": "Point", 
+							"coordinates": [1.44372, 43.601940]
+						},
+						"properties": {
+							"radius": {
+								"value": 200.0,
+								"units": "M"
+							}
+						}
+					},
+					"altitude_upper": {
+						"value": 200,
+						"reference": "W84",
+						"units": "M"
+					}
+				},
+				"start": "2025-01-01T00:00:00Z",
+				"end": "2025-01-01T18:00:00Z"
+			}]
+		}
+		
+		fake_fp = FlightPlan(data)
+
+		self.flight_plans.append(fake_fp)
+
+		time.sleep(2)
+		self.send_fp_to_front(fake_fp.uuid)
+
 
 
 
@@ -230,6 +273,7 @@ class BackEnd():
 		flight_plan = next(fp for fp in self.flight_plans if fp.uuid == fp_id)
 
 		msg = "ausart_back_end NEW_FP %s" % fp_id
+		print(msg)
 		IvySendMsg(msg)
 
 		for geometry in flight_plan.geometries:

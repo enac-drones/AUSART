@@ -21,13 +21,13 @@ class Geometry():
 
 		if json["geospatialOccupancyType"] == "Volume4D":
 			if json["volume"]["outline_circle"] is not None:
-				print("CREATING A CIRCLE GEOMETRY")
+				#print("CREATING A CIRCLE GEOMETRY")
 				self.type = "circle"
 				self.center_lon = json["volume"]["outline_circle"]["geometry"]["coordinates"][0]
 				self.center_lat = json["volume"]["outline_circle"]["geometry"]["coordinates"][1]
 				self.radius = json["volume"]["outline_circle"]["properties"]["radius"]["value"]
 			elif json["volume"]["outline_polygon"] is not None:
-				print("CREATING A POLYGON GEOMETRY")
+				#print("CREATING A POLYGON GEOMETRY")
 				if json["volume"]["outline_polygon"]["type"] == "Polygon":
 					self.type = "polygon"
 					for coords in json["volume"]["outline_polygon"]["coordinates"][0]:

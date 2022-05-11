@@ -44,19 +44,12 @@ import PolygonGeometry
 	FillColor fc (Yellow)
 	List geometries
 
-	// JUST FOR DEV PROCESS //
-	addChildrenTo geometries {
-		Circle _ (1.44372, -43.601940, 0.000036)
-	}
-
 	// KEEP ONLY MESSAGES ADRESSED TO THIS FLIGHT PLAN //
 	TextComparator tc_fp_id_poly (id, "")
 	new_poly_section_fp_id => tc_fp_id_poly.right
 
 	TextComparator tc_fp_id_circle (id, "")
 	new_circle_section_fp_id => tc_fp_id_circle.right
-
-	"TC CIRCLE : LEFT = " + tc_fp_id_circle.left + " / RIGHT = " + tc_fp_id_circle.right + " / OUTPUT = " + tc_fp_id_circle.output => log3.input
 
 	// ADD POLYGON_GEOMETRY TO GEOMETRIES //
 	tc_fp_id_poly.output.true -> add_new_polygon_geometry:(this){
