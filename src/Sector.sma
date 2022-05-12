@@ -60,6 +60,33 @@ Sector (string _sector_id, string _init_restriction, Process _ivybus, Process fr
 		State not_selected {
 			0.0001 =: out_width.width
 			0 =: fo.a
+			Switch repr_auth (no_restriction) {
+				Component no_restriction {
+					0.0001 =: out_width.width
+					0 =: fo.a
+				}
+				Component conditional {
+					0.0001 =: out_width.width
+					0 =: fo.a
+					255 =: out_color.r
+					165 =: out_color.g
+					0 =: out_color.b
+				}
+				Component req_authorisation {
+					0.0001 =: out_width.width
+					0 =: fo.a
+					255 =: out_color.r
+					69 =: out_color.g
+					0 =: out_color.b
+				}
+				Component prohibited {
+					0.0001 =: out_width.width
+					0.3 =: fo.a
+					255 =: fc.r
+					69 =: fc.g
+					0 =: fc.b
+				}
+			}
 		}
 		State selected {
 			0.0008 =: out_width.width
@@ -69,8 +96,11 @@ Sector (string _sector_id, string _init_restriction, Process _ivybus, Process fr
 		selected -> not_selected (sector_poly.press)
 	}
 
+	repr_auth aka sect_repr.not_selected.repr_auth
+
 	sect_repr.state -> {"STATE CHANGED FOR " + sector_id + ", NEW STATE : " + sect_repr.state =: log2.input}
 
+	restriction =:> repr_auth.state
 	
 
 
