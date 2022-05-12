@@ -11,6 +11,7 @@ import FlightPlanManager
 import Dialog
 import VFRPoint
 import Heliport
+import Button
 
 
 _native_code_
@@ -64,6 +65,15 @@ Component root {
 	Exit ex (0, 1)
 	f.close -> ex
 	mouseTracking = 1
+
+	////////////
+	// SPIKES //
+	////////////
+
+	Spike set_no_restriction
+	Spike set_req_authorisation
+	Spike set_prohibited
+	Spike set_conditional
 
 	////////////////
 	// BACKGROUND //
@@ -436,7 +446,7 @@ Component root {
 		// SECTOR MANAGER //
 		////////////////////
 
-		SectorManager sector_manager (f, ivybus)
+		SectorManager sector_manager (f, set_no_restriction, set_req_authorisation, set_prohibited, set_conditional, ivybus)
 		
 		/////////////////////////
 		// FLIGHT PLAN MANAGER //
@@ -450,6 +460,14 @@ Component root {
 	////////////////////////
 
 	Dialog dialog (f, ivybus, pan_and_zoom_layer.flight_plan_manager)
+	Button btn_no_restriction (f, "NO_RESTRICTION", 500, 20)
+	btn_no_restriction.click -> set_no_restriction
+	Button btn_req_auth (f, "REQ_AUTHORISATION", 650, 20)
+	btn_req_auth.click -> set_req_authorisation
+	Button btn_prohibited (f, "PROHIBITED", 800, 20)
+	btn_prohibited.click -> set_prohibited
+	Button btn_cond (f, "CONDITIONAL", 950, 20)
+	btn_cond.click -> set_conditional
 
 	// DEBUG //
 

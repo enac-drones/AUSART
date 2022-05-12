@@ -6,17 +6,21 @@ use display
 
 
 _define_
-Sector (string _sector_id, string _init_restriction, Process _ivybus, Process frame){
+Sector (Process sect_manager, string _sector_id, string _init_restriction, Process _ivybus, Process frame){
 
 	TextPrinter log 
 	TextPrinter log2
 	TextPrinter log3
 	TextPrinter log4
 	TextPrinter log5
+	TextPrinter log6
+
 
 	String sector_id (_sector_id)
 	String restriction (_init_restriction)
 	"NEW SECTOR CREATED : " + sector_id + " WITH RESTRICTION " + restriction =: log.input
+
+	restriction -> {"CHANGING RESTRICTION OF SECTOR " + sector_id + " TO " + restriction =: log6.input}
 
 	// STORE INFORMATION OF POINTS TO ADD TO SECTOR POLYGON //
 	String new_point_sect_id ("")
@@ -60,6 +64,7 @@ Sector (string _sector_id, string _init_restriction, Process _ivybus, Process fr
 		State not_selected {
 			0.0001 =: out_width.width
 			0 =: fo.a
+			this =: sect_manager.deselection_request
 			Switch repr_auth (no_restriction) {
 				Component no_restriction {
 					0.0001 =: out_width.width
@@ -91,18 +96,17 @@ Sector (string _sector_id, string _init_restriction, Process _ivybus, Process fr
 		State selected {
 			0.0008 =: out_width.width
 			1 =: fo.a
+			this =: sect_manager.selection_request
 		}
 		not_selected -> selected (sector_poly.press)
 		selected -> not_selected (sector_poly.press)
+		selected -> not_selected (sect_manager.deselect_all)
 	}
 
 	repr_auth aka sect_repr.not_selected.repr_auth
+	restriction =:> repr_auth.state
 
 	sect_repr.state -> {"STATE CHANGED FOR " + sector_id + ", NEW STATE : " + sect_repr.state =: log2.input}
-
-	restriction =:> repr_auth.state
-	
-
 
 
 }
