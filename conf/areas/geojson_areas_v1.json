@@ -4,6 +4,7 @@
 		{
 			"type": "Polygon",
 			"id":"BLAGNAC_CTR",
+			"restriction":"no_restriction",
 			"coordinates": [
 				[
 					[1.30166, 43.83611], 
@@ -25,6 +26,7 @@
 		{
 			"type": "Polygon",
 			"id":"AIRPORT_AREA",
+			"restriction":"no_restriction",
 			"coordinates": [
 				[
 					[1.31322, 43.65287], 
@@ -38,6 +40,7 @@
 		{
 			"type": "Polygon",
 			"id":"SOUTH_FINALE",
+			"restriction":"no_restriction",
 			"coordinates": [
 				[
 					[1.36575, 43.59832], 
@@ -51,6 +54,7 @@
 		{
 			"type": "Polygon",
 			"id":"NORTH_FINALE",
+			"restriction":"no_restriction",
 			"coordinates": [
 				[
 					[1.31322, 43.65287], 
@@ -64,6 +68,7 @@
 		{
 			"type": "Polygon",
 			"id":"PROTECT_AREA_EAST",
+			"restriction":"no_restriction",
 			"coordinates": [
 				[
 					[1.31311, 43.73936], 
@@ -78,6 +83,7 @@
 		{
 			"type": "Polygon",
 			"id":"PROTECT_AREA_WEST",
+			"restriction":"no_restriction",
 			"coordinates": [
 				[
 					[1.23621, 43.71356], 
@@ -91,6 +97,7 @@
 		{
 			"type": "Polygon",
 			"id":"SOUTH_FINALE_PROLONG",
+			"restriction":"no_restriction",
 			"coordinates": [
 				[
 					[1.41170, 43.51719], 
@@ -105,6 +112,7 @@
 		{
 			"type": "Polygon",
 			"id":"NORTH_FINALE_PROLONG",
+			"restriction":"no_restriction",
 			"coordinates": [
 				[
 					[1.15480, 43.80235], 
@@ -118,6 +126,7 @@
 		{
 			"type": "Polygon",
 			"id":"OUTSIDE_PROTECT_EAST",
+			"restriction":"no_restriction",
 			"coordinates": [
 				[
 					[1.28774, 43.76288], 
@@ -132,6 +141,7 @@
 		{
 			"type": "Polygon",
 			"id":"OUTSIDE_PROTECT_WEST",
+			"restriction":"no_restriction",
 			"coordinates": [
 				[
 					[1.17925, 43.72252], 
@@ -147,6 +157,7 @@
 		{
 			"type": "Polygon",
 			"id":"NORTH_WEST_CTR",
+			"restriction":"no_restriction",
 			"coordinates": [
 				[
 					[1.06777, 43.78250], 
@@ -161,6 +172,7 @@
 		{
 			"type": "Polygon",
 			"id":"WEST_CTR",
+			"restriction":"no_restriction",
 			"coordinates": [
 				[
 					[1.17222, 43.50444], 
@@ -175,6 +187,7 @@
 		{
 			"type": "Polygon",
 			"id":"SOUTH_CTR",
+			"restriction":"no_restriction",
 			"coordinates": [
 				[
 					[1.34166, 43.44944], 
@@ -189,6 +202,7 @@
 		{
 			"type": "Polygon",
 			"id":"NORTH_EAST_CTR",
+			"restriction":"no_restriction",
 			"coordinates": [
 				[
 					[1.22806, 43.81909], 
@@ -203,6 +217,7 @@
 		{
 			"type": "Polygon",
 			"id":"EAST_CTR",
+			"restriction":"no_restriction",
 			"coordinates": [
 				[
 					[1.32791, 43.77652], 
