@@ -10,10 +10,11 @@ import json
 class Sector():
 
 
-	def __init__(self, id, name, init_restriction, coords):
+	def __init__(self, _id, name, init_restriction, coords):
 
 		## INIT PARAMS ##
-		self.id = id
+		self.id = _id
+		self.uuid = None
 		self.name = name
 		self.restriction = init_restriction
 		self.coords = coords
@@ -39,7 +40,7 @@ class Sector():
 		self.zone_authority_requirements_purpose = "authorization"
 		self.zone_authority_requirements_interval_before = None
 		# applicability #
-		self.permanent = "YES"
+		self.permanent = "yes"
 		# geometry #
 		self.uom_dimensions = "FT"
 		self.lower_limit = 0
@@ -96,12 +97,9 @@ class Sector():
 				"horizontal_projection": 
 					{
 						"polygon": {
-							"type": self.geometry_type,
-							"coordinates": 
-							[
-								[self.coords]
-							]
-						},
+							"type": "Polygon",
+							"coordinates": [self.polygon_coordinates]
+						}
 					}
 				}
 			],
@@ -113,7 +111,12 @@ class Sector():
 
 		response = requests.post(url, headers=headers, data=payload)
 
-		print(response.text)
+		if response.status_code == 201:
+			self.uuid = response["uuid"]
+			print("SECTOR %s SUCCESSFULLY SUBMITED, ID = %s" % (self.name, self.uuid))
+		else:
+			print("ERROR IN SUBMISSION OF SECTOR %s" % self.name)
+			print(response.status_code)
 
 
 

@@ -45,57 +45,14 @@ class BackEnd():
 
 		## INIT FUNCTIONS ##
 		self.load_sectors('../conf/areas/geojson_areas_v2.json')
-		# self.log_in_to_UCIS()
-		#self.post_sectors_to_ucis()
+		self.log_in_to_UCIS()
+		self.post_sectors_to_ucis()
 
 		## SOCKETS ##
-		#asyncio.run(self.main())
+		asyncio.run(self.thread_listen_dops())
 
-		#thread_notif_dops = threading.Thread(target=self.thread_listen_dops, daemon=True)
-		#thread_notif_dops.start()
-
-		## add flight plan for dev process ##
-		data = {
-			"uuid": "fake-uuid-for-test",
-			"expected_start": "2025-01-01T00:00:00Z",
-			"expected_end": "2025-01-01T18:00:00Z",
-			"status": "filed",
-			"status_detail": "no details",
-			"metadata": "fake_metadata",
-			"geospatial_occupancy": [{
-				"geospatialOccupancyType": "Volume4D",
-				"volume": {
-					"outline_polygon": None, 
-					"outline_circle": {
-						"type": "Feature",
-						"geometry": {
-							"type": "Point", 
-							"coordinates": [1.44372, 43.601940]
-						},
-						"properties": {
-							"radius": {
-								"value": 200.0,
-								"units": "M"
-							}
-						}
-					},
-					"altitude_upper": {
-						"value": 200,
-						"reference": "W84",
-						"units": "M"
-					}
-				},
-				"start": "2025-01-01T00:00:00Z",
-				"end": "2025-01-01T18:00:00Z"
-			}]
-		}
-		
-		fake_fp = FlightPlan(data)
-
-		self.flight_plans.append(fake_fp)
-
-		time.sleep(2)
-		self.send_fp_to_front(fake_fp.uuid)
+		thread_notif_dops = threading.Thread(target=self.thread_listen_dops, daemon=True)
+		thread_notif_dops.start()
 
 
 
@@ -117,7 +74,6 @@ class BackEnd():
 		headers = {
 			"Authorization":"Bearer " + self.token
 		}
-		print ("\n headers ", headers)
 		async with websockets.connect("wss://wss.ucis.ssghosting.net/dops", extra_headers=headers) as websocket:
 			async for message in websocket:
 				await self.process_dops(message)
@@ -250,8 +206,8 @@ class BackEnd():
 		# 	sect.post_sector_min_info(self.headers)
 
 		## FOR EXPE ONLY SEND 1st SECTOR ##
-		sect = self.sectors[0]
-		sect.post_sector_min_info(self.headers)
+		sect = self.sectors[1]
+		sect.post_sector(self.headers)
 
 
 
