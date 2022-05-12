@@ -108,5 +108,5 @@ Sector (Process sect_manager, string _sector_id, string _init_restriction, Proce
 
 	sect_repr.state -> {"STATE CHANGED FOR " + sector_id + ", NEW STATE : " + sect_repr.state =: log2.input}
 
-
+	restriction -> {"ausart_front_end SECT_RESTRICT_CHANGED " + sector_id + " " + restriction =: _ivybus.out}
 }

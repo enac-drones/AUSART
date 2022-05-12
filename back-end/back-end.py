@@ -37,7 +37,11 @@ class BackEnd():
 		IvyStart()
 		IvyBindMsg(self.send_sectors_to_front, "FRONT_END_READY")
 		IvyBindMsg(self.validate_flight_plan, "ausart_front_end VALIDATE_FP (\\S*)")
+		# ausart_front_end VALIDATE_FP fp_id
 		IvyBindMsg(self.reject_flight_plan, "ausart_front_end REJECT_FP (\\S*)")
+		# ausart_front_end REJECT_FP fp_id
+		IvyBindMsg(self.update_sector, "ausart_front_end SECT_RESTRICT_CHANGED (\\S*) (\\S*)")
+		# ausart_front_end SECT_RESTRICT_CHANGED sect_id new_restri
 
 		## INIT FUNCTIONS ##
 		self.load_sectors('../conf/areas/geojson_areas_v2.json')
@@ -302,6 +306,12 @@ class BackEnd():
 
 	def reject_flight_plan(self, agent, fp_id):
 		print("REJECTING FP WITH ID = " + fp_id)
+		return
+
+
+
+	def update_sector(self, agent, sect_id, new_restri):
+		print("UPDATING SECTOR WITH ID " + sect_id + " / NEW RESTRICTION = " + new_restri)
 		return
 
 
