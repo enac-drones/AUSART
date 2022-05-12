@@ -9,7 +9,7 @@ redirect: default
 #--
 # configuration
 exe := gcs-ppz
-srcs_sma := src/main.sma src/PanAndZoom.sma src/AircraftManager.sma src/AircraftDrone.sma src/SectorManager.sma src/Sector.sma src/Dialog.sma src/VFRPoint.sma src/Heliport.sma src/FlightPlan.sma src/FlightPlanManager.sma src/PolygonGeometry.sma
+srcs_sma := src/main.sma src/PanAndZoom.sma src/AircraftManager.sma src/AircraftDrone.sma src/SectorManager.sma src/Sector.sma src/Dialog.sma src/VFRPoint.sma src/Heliport.sma src/FlightPlan.sma src/FlightPlanManager.sma src/PolygonGeometry.sma src/Button.sma
 #src/AircraftManager.sma src/SectorManager.sma
 
 #djnn_libs := gui display base core
@@ -25,6 +25,7 @@ exe_dir := .
 
 # ajouté comme un cochon // demander au LII
 # LDFLAGS += -ltinyxml2
+LDFLAGS += -lproj
 
 # in cookbook
 #djnn_path := ../../../djnn-cpp

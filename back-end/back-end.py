@@ -36,6 +36,8 @@ class BackEnd():
 		IvyInit("AUSART_BACK_END")
 		IvyStart()
 		IvyBindMsg(self.send_sectors_to_front, "FRONT_END_READY")
+		IvyBindMsg(self.validate_flight_plan, "ausart_front_end VALIDATE_FP (\\S*)")
+		IvyBindMsg(self.reject_flight_plan, "ausart_front_end REJECT_FP (\\S*)")
 
 		## INIT FUNCTIONS ##
 		self.load_sectors('../conf/areas/geojson_areas_v2.json')
@@ -272,7 +274,7 @@ class BackEnd():
 
 		flight_plan = next(fp for fp in self.flight_plans if fp.uuid == fp_id)
 
-		msg = "ausart_back_end NEW_FP %s" % fp_id
+		msg = "ausart_back_end NEW_FP %s %s %s" % (fp_id, flight_plan.expected_start.replace(" ", "_"), flight_plan.expected_end.replace(" ", "_"))
 		print(msg)
 		IvySendMsg(msg)
 
@@ -289,6 +291,17 @@ class BackEnd():
 						% (fp_id, geometry.id, coord[1], coord[0]) 
 					IvySendMsg(msg)
 
+
+
+	def validate_flight_plan(self, agent, fp_id):
+		print("VALIDATING FP WITH ID = " + fp_id)
+		return
+
+
+
+	def reject_flight_plan(self, agent, fp_id):
+		print("REJECTING FP WITH ID = " + fp_id)
+		return
 
 
 

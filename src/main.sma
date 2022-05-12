@@ -21,6 +21,7 @@ _native_code_
 #include <string.h>
 #include <math.h>
 #include <iostream>
+#include <proj.h>
 
 char* buildPath (const char* file)
 {
@@ -32,6 +33,19 @@ char* buildPath (const char* file)
   free (prefix);
   return path;
 }
+
+void test(const double lat, const double lon, djnn::DoubleProperty* x, djnn::DoubleProperty* y)
+{
+	PJ_CONTEXT* pj_context;
+	pj_context = proj_context_create();
+  auto proj_4326_3857 = proj_create_crs_to_crs (pj_context,
+    "EPSG:4326",
+    "+proj=ortho +lat_0=43.64381 +lon_0=1.3723",
+    nullptr);
+  	auto plop = proj_trans (proj_4326_3857, PJ_FWD, proj_coord(lat, lon, 0, 0));
+    x->set_value(plop.xy.x, 1);
+    y->set_value(plop.xy.y, 1);
+}
 %}
 
 
@@ -40,6 +54,7 @@ _main_
 Component root {
 
 	TextPrinter log
+	TextPrinter log2
 
 	///////////
 	// FRAME //
@@ -60,6 +75,18 @@ Component root {
 	f.width =:> bg.width
 	f.height =:> bg.height
 
+	Double lat_test (43.646236)
+	Double lon_test (1.380367)
+	Double x_test (0)
+	Double y_test (0)
+
+	Ref x_test_ref (x_test)
+	Ref y_test_ref (y_test)
+
+	test($lat_test, $lon_test, x_test, y_test)
+
+	"X Y :" + x_test + " " + y_test =: log2.input
+
 	////////////////
 	// IVY ACCESS //
 	////////////////
@@ -75,8 +102,8 @@ Component root {
 		// ausart_back_end UPDATE_AC ac_id lat lon current_sector
 		// String delete_ac ("ausart_back_end DELETE_AC (\\S*)")
 		// ausart_back_end DELETE_AC ac_id
-		String new_flight_plan ("ausart_back_end NEW_FP (\\S*)")
-		// ausart_back_end NEW_FP fp_id
+		String new_flight_plan ("ausart_back_end NEW_FP (\\S*) (\\S*) (\\S*)")
+		// ausart_back_end NEW_FP fp_id exp_start exp_end
 		String new_flight_plan_section_polygon ("ausart_back_end NEW_FP_SECTION_POLYGON (\\S*) (\\S*)")
 		// ausart_back_end NEW_FP_SECTION_POLYGON fp_id section_id
 		String new_flight_plan_section_circle ("ausart_back_end NEW_FP_SECTION_CIRCLE (\\S*) (\\S*) (\\S*) (\\S*) (\\S*)")
@@ -97,7 +124,7 @@ Component root {
 
 	Component pan_and_zoom_layer {
 
-		PanAndZoom pz (f.move, f.press, f.release, f.wheel.dy, 1882.996071, -0.868179, 43.910137)
+		PanAndZoom pz (f.move, f.press, f.release, f.wheel.dy, 1882.996071, -0.978489, 43.926698)
 
 		Scaling zoom_tr (1, 1, 0, 0)
 		Translation pan_tr (0, 0)
@@ -422,7 +449,7 @@ Component root {
 	// FIXED LAYER ON TOP //
 	////////////////////////
 
-	Dialog dialog ($f.width, $f.height)
+	Dialog dialog (f, ivybus, pan_and_zoom_layer.flight_plan_manager)
 
 	// DEBUG //
 
