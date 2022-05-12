@@ -214,8 +214,9 @@ class BackEnd():
 
 				sect_name = json_sector['id']
 				coordinates = json_sector['coordinates']
+				init_restriction = json_sector['restriction']
 
-				sect = Sector ("XXXXXXX", sect_name, "no_restriction", coordinates[0])
+				sect = Sector ("XXXXXXX", sect_name, init_restriction, coordinates[0])
 				self.sectors.append(sect)
 
 
@@ -226,7 +227,7 @@ class BackEnd():
 
 		for sect in self.sectors:
 
-			msg = "ausart_back_end AREA_INIT %s" % sect.name
+			msg = "ausart_back_end AREA_INIT %s %s" % (sect.name, sect.restriction)
 			IvySendMsg(msg)
 
 			for point in sect.coords:

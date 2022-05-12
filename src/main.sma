@@ -92,8 +92,8 @@ Component root {
 	////////////////
 
 	IvyAccess ivybus ("127.255.255.255:2010", "AUSART_FRONT_END", "FRONT_END_READY") {
-		String area_init ("ausart_back_end AREA_INIT (\\S*)")
-		// ausart_back_end AREA_INIT area_id 
+		String area_init ("ausart_back_end AREA_INIT (\\S*) (\\S*)")
+		// ausart_back_end AREA_INIT area_id init_restriction
 		String point_area_init ("ausart_back_end POINT_AREA_INIT (\\S*) (\\S*) (\\S*)")
 		// ausart_back_end POINT_AREA_INIT area_id point_lat point_lon
 		// String new_ac ("ausart_back_end NEW_AC (\\S*)")

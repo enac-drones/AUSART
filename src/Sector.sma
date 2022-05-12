@@ -6,7 +6,7 @@ use display
 
 
 _define_
-Sector (Process _sector_id, Process _ivybus, Process frame){
+Sector (string _sector_id, string _init_restriction, Process _ivybus, Process frame){
 
 	TextPrinter log 
 	TextPrinter log2
@@ -14,9 +14,9 @@ Sector (Process _sector_id, Process _ivybus, Process frame){
 	TextPrinter log4
 	TextPrinter log5
 
-	String sector_id ("no_id")
-	_sector_id =: sector_id
-	"NEW SECTOR CREATED : " + sector_id =: log.input
+	String sector_id (_sector_id)
+	String restriction (_init_restriction)
+	"NEW SECTOR CREATED : " + sector_id + " WITH RESTRICTION " + restriction =: log.input
 
 	// STORE INFORMATION OF POINTS TO ADD TO SECTOR POLYGON //
 	String new_point_sect_id ("")
@@ -50,7 +50,7 @@ Sector (Process _sector_id, Process _ivybus, Process frame){
 		notify this.sector_poly
 	}
 
-	tc_sect_id.output.true -> {"NEW POINT FOR SECT " + sector_id + " WITH COORD : LAT = " + new_point_lat + ", LON = " + new_point_lon =: log.input}
+	// tc_sect_id.output.true -> {"NEW POINT FOR SECT " + sector_id + " WITH COORD : LAT = " + new_point_lat + ", LON = " + new_point_lon =: log.input}
 
 	// MANAGE USER INTERACTIONS ON SECTOR //
 	// sector_poly.press -> {"CLICK ON SECTOR " + sector_id =: log2.input}
