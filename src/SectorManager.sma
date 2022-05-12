@@ -79,7 +79,8 @@ SectorManager(Process _frame, Process set_no_restriction, Process set_req_author
 				sect.restriction = "no_restriction"
 			}
 		}
-		for (int i = 1; i <= $this.selected_sectors.size; i++){
+		int list_size = $this.selected_sectors.size
+		for (int i = 1; i <= list_size; i++){
 			delete this.selected_sectors.[1]
 		}
 	}
@@ -92,7 +93,8 @@ SectorManager(Process _frame, Process set_no_restriction, Process set_req_author
 				sect.restriction = "req_authorisation"
 			}
 		}
-		for (int i = 1; i <= $this.selected_sectors.size; i++){
+		int list_size = $this.selected_sectors.size
+		for (int i = 1; i <= list_size; i++){
 			delete this.selected_sectors.[1]
 		}
 	}
@@ -105,11 +107,13 @@ SectorManager(Process _frame, Process set_no_restriction, Process set_req_author
 				sect.restriction = "prohibited"
 			}
 		}
-		for (int i = 1; i <= $this.selected_sectors.size; i++){
+		int list_size = $this.selected_sectors.size
+		for (int i = 1; i <= list_size; i++){
 			delete this.selected_sectors.[1]
 		}
 	}
 	set_prohibited -> deselect_all
+
 
 	set_conditional -> change_to_conditional:(this){
 		for (int i = 1; i <= $this.selected_sectors.size; i++){
@@ -118,11 +122,24 @@ SectorManager(Process _frame, Process set_no_restriction, Process set_req_author
 				sect.restriction = "conditional"
 			}
 		}
-		for (int i = 1; i <= $this.selected_sectors.size; i++){
+		int list_size = $this.selected_sectors.size
+		for (int i = 1; i <= list_size; i++){
 			delete this.selected_sectors.[1]
 		}
 	}
 	set_conditional-> deselect_all
 
+/*	set_prohibited -> change_to_prohibited:(this){
+		for (int i = 1; i <= $this.selected_sectors.size; i++){
+			sect = getRef(&this.selected_sectors.[i])
+			if (&sect != null){
+				sect.restriction = "prohibited"
+			}
+		}
+		for (int i = 1; i <= $this.selected_sectors.size; i++){
+			delete this.selected_sectors.[1]
+		}
+	}
+	set_prohibited -> deselect_all*/
 
 }
