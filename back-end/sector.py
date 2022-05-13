@@ -112,9 +112,78 @@ class Sector():
 		response = requests.post(url, headers=headers, data=payload)
 
 		if response.status_code == 201:
-			self.uuid = response["uuid"]
+			self.uuid = response.json()["uuid"]
 			print("SECTOR %s SUCCESSFULLY SUBMITED, ID = %s" % (self.name, self.uuid))
 		else:
 			print("ERROR IN SUBMISSION OF SECTOR %s" % self.name)
 			print(response.status_code)
 
+
+
+
+	def update_with_new_restri(self, new_restri, headers):
+
+		self.restriction = new_restri
+
+		url = "https://www.ucis.ssghosting.net/v1/geoawareness/uaszones/%s" % self.uuid
+
+		payload = json.dumps({
+			"name": self.name,
+			"type": self.type,
+			"restriction": new_restri,
+			"restriction_conditions": self.restriction_condition,
+			"region": self.region,
+			"reason": [
+				self.reason
+			],
+			"other_reason_info": self.other_reason_info,
+			"regulation_exemption": self.regulation_exemption,
+			"uspace_class": [
+				self.uspace_class
+			],
+			"message": self.message,
+			"zone_authority": [{
+				"name": self.zone_authority_name,
+				"service": self.zone_authority_service,
+				"contact_name": self.zone_authority_contact_name,
+				"site_url": self.zone_authority_site_url,
+				"email": self.zone_authority_email,
+				"phone": self.zone_authority_phone,
+				"authority_requirements": 
+				{
+					"purpose": self.zone_authority_requirements_purpose,
+					"interval_before": self.zone_authority_requirements_interval_before
+				}
+			}],
+			"applicability": 
+			[{
+				"permanent": self.permanent,
+			}],
+			"geometry": [{
+				"uom_dimensions": self.uom_dimensions,
+				"lower_limit": self.lower_limit,
+				"lower_vertical_reference": self.lower_vertical_reference,
+				"upper_limit": self.upper_limit,
+				"upper_vertical_reference": self.upper_vertical_reference,
+				"horizontal_projection": 
+					{
+						"polygon": {
+							"type": "Polygon",
+							"coordinates": [self.polygon_coordinates]
+						}
+					}
+				}
+			],
+			"uas_zone": {
+				"identifier": self.id,
+				"country": self.country
+			}
+		})
+
+		response = requests.post(url, headers=headers, data=payload)
+
+		if response.status_code == 204:
+			print("SECTOR %s SUCCESSFULLY UPDATED, ID = %s" % (self.name, self.uuid))
+		else:
+			print("ERROR IN UPDATE OF SECTOR %s" % self.name)
+			print(response.text)

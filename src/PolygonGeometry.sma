@@ -35,6 +35,8 @@ PolygonGeometry(string id, string fp_id, Process _ivybus) {
 
 	tc_fp_id.output && tc_section_id.output => add_point
 
+	add_point.true -> {"ADDING POINT TO FLIGHT PLAN ; X = " + new_point_lat + " / Y = " + new_point_lon =: log2.input}
+
 	add_point.true -> add_new_point:(this){
 		addChildrenTo this.poly {
 			Point _ ($this.new_point_lon, - $this.new_point_lat)

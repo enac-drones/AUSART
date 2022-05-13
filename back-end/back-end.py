@@ -46,7 +46,7 @@ class BackEnd():
 		## INIT FUNCTIONS ##
 		self.load_sectors('../conf/areas/geojson_areas_v2.json')
 		self.log_in_to_UCIS()
-		self.post_sectors_to_ucis()
+		#self.post_sectors_to_ucis()
 
 		## SOCKETS ##
 		asyncio.run(self.thread_listen_dops())
@@ -201,13 +201,9 @@ class BackEnd():
 
 	def post_sectors_to_ucis(self):
 
-		# for sect in self.sectors:
+		for sect in self.sectors:
 
-		# 	sect.post_sector_min_info(self.headers)
-
-		## FOR EXPE ONLY SEND 1st SECTOR ##
-		sect = self.sectors[1]
-		sect.post_sector(self.headers)
+			sect.post_sector(self.headers)
 
 
 
@@ -248,6 +244,7 @@ class BackEnd():
 				msg = "ausart_back_end NEW_FP_SECTION_POLYGON %s %s" % (fp_id, geometry.id)
 				IvySendMsg(msg)
 				for coord in geometry.coords:
+					time.sleep(0.001)
 					msg = "ausart_back_end NEW_FP_SECTION_POLYGON_POINT %s %s %s %s" \
 						% (fp_id, geometry.id, coord[1], coord[0]) 
 					IvySendMsg(msg)
@@ -256,18 +253,36 @@ class BackEnd():
 
 	def validate_flight_plan(self, agent, fp_id):
 		print("VALIDATING FP WITH ID = " + fp_id)
-		return
+
+		url = "https://www.ucis.ssghosting.net/v1/dops/approve/%s" % fp_id
+
+		payload = json.dumps({"authority_comments": "no comments"})
+
+		response = requests.put(url, headers=self.headers, data=payload)
+
+		print(response)
 
 
 
 	def reject_flight_plan(self, agent, fp_id):
 		print("REJECTING FP WITH ID = " + fp_id)
-		return
+
+		url = "https://www.ucis.ssghosting.net/v1/dops/reject/%s" % fp_id
+
+		payload = json.dumps({"reason": "not supported yet"})
+
+		response = requests.put(url, headers=self.headers, data=payload)
+
+		print(response)
 
 
 
-	def update_sector(self, agent, sect_id, new_restri):
-		print("UPDATING SECTOR WITH ID " + sect_id + " / NEW RESTRICTION = " + new_restri)
+	def update_sector(self, agent, sector_id, new_restri):
+		print("UPDATING SECTOR WITH ID " + sector_id + " / NEW RESTRICTION = " + new_restri)
+		sect = next(sect for sect in self.sectors if sect.name == sector_id)
+
+		sect.update_with_new_restri(new_restri, self.headers)
+
 		return
 
 

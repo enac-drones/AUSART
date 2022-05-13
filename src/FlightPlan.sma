@@ -69,8 +69,9 @@ import PolygonGeometry
 	tc_fp_id_poly.output.true -> add_new_polygon_geometry:(this){
 		addChildrenTo this.geometries {
 			PolygonGeometry p (toString(this.new_poly_section_id), toString(this.fp_id), getRef(this.ivybus))
-			p.press -> {"FP WITH ID = " + this.fp_id + " SELECTED " =: this.log2.input}
-			//p.press -> this.assign_fp_info_to_dialog
+			p.poly.press -> {"FP WITH ID = " + this.fp_id + " SELECTED " =: this.log2.input}
+			p.poly.press -> this.assign_info
+			p.poly.press -> this.show_info
 		}
 	}
 	add_new_polygon_geometry~>_ivybus.in.new_flight_plan_section_polygon_point[1]
@@ -80,7 +81,6 @@ import PolygonGeometry
 		addChildrenTo this.geometries {
 			Circle c ($this.new_circle_section_center_lon, - $this.new_circle_section_center_lat, $this.new_circle_section_radius * 0.000036)
 			c.press -> {"FP WITH ID = " + this.fp_id + " SELECTED " =: this.log2.input}
-			//c.press -> this.assign_fp_info_to_dialog
 			c.press -> this.assign_info
 			c.press -> this.show_info
 		}
