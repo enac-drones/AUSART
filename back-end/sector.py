@@ -54,7 +54,7 @@ class Sector():
 
 	def post_sector(self, headers):
 
-		url = "https://www.ucis.ssghosting.net/v1/geoawareness/uaszones"
+		url = "http://10.192.36.100:8080/v1/geoawareness/uaszones"
 
 		payload = json.dumps({
 			"name": self.name,
@@ -125,7 +125,7 @@ class Sector():
 
 		self.restriction = new_restri
 
-		url = "https://www.ucis.ssghosting.net/v1/geoawareness/uaszones/%s" % self.uuid
+		url = "http://10.192.36.100:8080/v1/geoawareness/uaszones/%s" % self.uuid
 
 		payload = json.dumps({
 			"name": self.name,
@@ -180,7 +180,7 @@ class Sector():
 			}
 		})
 
-		response = requests.post(url, headers=headers, data=payload)
+		response = requests.put(url, headers=headers, data=payload)
 
 		if response.status_code == 204:
 			print("SECTOR %s SUCCESSFULLY UPDATED, ID = %s" % (self.name, self.uuid))

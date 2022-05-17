@@ -22,7 +22,7 @@ class BackEnd():
 
 	def __init__(self):
 
-		self.client_id = 'd7d08988-97ba-44af-a7e1-afab0524510b'
+		self.client_id = 'enac'
 		self.username = 'cconan'
 		self.password = 'wac_2022'
 		self.token = None
@@ -46,7 +46,7 @@ class BackEnd():
 		## INIT FUNCTIONS ##
 		self.load_sectors('../conf/areas/geojson_areas_v2.json')
 		self.log_in_to_UCIS()
-		#self.post_sectors_to_ucis()
+		self.post_sectors_to_ucis()
 
 		## SOCKETS ##
 		asyncio.run(self.thread_listen_dops())
@@ -74,7 +74,7 @@ class BackEnd():
 		headers = {
 			"Authorization":"Bearer " + self.token
 		}
-		async with websockets.connect("wss://wss.ucis.ssghosting.net/dops", extra_headers=headers) as websocket:
+		async with websockets.connect("ws://10.192.36.100:8080/wss/dops", extra_headers=headers) as websocket:
 			async for message in websocket:
 				await self.process_dops(message)
 
@@ -86,7 +86,7 @@ class BackEnd():
 
 	def log_in_to_UCIS(self):
 		## Log in as ANSP into UCIS system ##
-		url = 'https://www.ucis.ssghosting.net/auth/realms/UCIS/protocol/openid-connect/token'
+		url = 'http://10.192.36.100:8090/auth/realms/UCIS/protocol/openid-connect/token'
 
 		headers = {
 			'Content-Type': 'application/x-www-form-urlencoded',
@@ -136,7 +136,7 @@ class BackEnd():
 	def thread_refresh(self, expires_in):
 		## Creates a new thread to auto refresh the access token ##
 
-		url = 'https://www.ucis.ssghosting.net/auth/realms/UCIS/protocol/openid-connect/token'
+		url = 'http://10.192.36.100:8090/auth/realms/UCIS/protocol/openid-connect/token'
 		
 		while True:
 
@@ -211,7 +211,7 @@ class BackEnd():
 	def add_new_fp(self, fp_id):
 		# adds new fp from UCIS to local database #
 
-		url = "https://www.ucis.ssghosting.net/v1/dops/"
+		url = "http://10.192.36.100:8080/v1/dops/"
 
 		params = {
 			"dop_uuids": [fp_id]
@@ -254,7 +254,7 @@ class BackEnd():
 	def validate_flight_plan(self, agent, fp_id):
 		print("VALIDATING FP WITH ID = " + fp_id)
 
-		url = "https://www.ucis.ssghosting.net/v1/dops/approve/%s" % fp_id
+		url = "http://10.192.36.100:8080/v1/dops/approve/%s" % fp_id
 
 		payload = json.dumps({"authority_comments": "no comments"})
 
@@ -267,7 +267,7 @@ class BackEnd():
 	def reject_flight_plan(self, agent, fp_id):
 		print("REJECTING FP WITH ID = " + fp_id)
 
-		url = "https://www.ucis.ssghosting.net/v1/dops/reject/%s" % fp_id
+		url = "http://10.192.36.100:8080/v1/dops/reject/%s" % fp_id
 
 		payload = json.dumps({"reason": "not supported yet"})
 
