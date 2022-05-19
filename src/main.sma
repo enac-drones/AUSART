@@ -85,7 +85,7 @@ Component root {
 	f.width =:> bg.width
 	f.height =:> bg.height
 
-	Double lat_test (43.646236)
+/*	Double lat_test (43.646236)
 	Double lon_test (1.380367)
 	Double x_test (0)
 	Double y_test (0)
@@ -95,7 +95,7 @@ Component root {
 
 	test($lat_test, $lon_test, x_test, y_test)
 
-	"X Y :" + x_test + " " + y_test =: log2.input
+	"X Y :" + x_test + " " + y_test =: log2.input*/
 
 	////////////////
 	// IVY ACCESS //
@@ -460,13 +460,13 @@ Component root {
 	////////////////////////
 
 	Dialog dialog (f, ivybus, pan_and_zoom_layer.flight_plan_manager)
-	Button btn_no_restriction (f, "NO_RESTRICTION", 500, 20)
+	Button btn_no_restriction (f, "NO_RESTRICTION", 500, 800)
 	btn_no_restriction.click -> set_no_restriction
-	Button btn_req_auth (f, "REQ_AUTHORISATION", 650, 20)
+	Button btn_req_auth (f, "REQ_AUTHORISATION", 650, 800)
 	btn_req_auth.click -> set_req_authorisation
-	Button btn_prohibited (f, "PROHIBITED", 800, 20)
+	Button btn_prohibited (f, "PROHIBITED", 800, 800)
 	btn_prohibited.click -> set_prohibited
-	Button btn_cond (f, "CONDITIONAL", 950, 20)
+	Button btn_cond (f, "CONDITIONAL", 950, 800)
 	btn_cond.click -> set_conditional
 
 	// DEBUG //
