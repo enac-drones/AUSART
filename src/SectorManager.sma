@@ -42,7 +42,7 @@ SectorManager(Process _frame, Process set_no_restriction, Process set_req_author
 
 	List selected_sectors
 
-	selected_sectors.size -> {"LIST SELECTED SECTORS SIZE = " + selected_sectors.size =: log2.input}
+	//selected_sectors.size -> {"LIST SELECTED SECTORS SIZE = " + selected_sectors.size =: log2.input}
 
 	selection_request -> l_sel_req:(this){
 		selected = getRef(&this.selection_request)
@@ -65,11 +65,6 @@ SectorManager(Process _frame, Process set_no_restriction, Process set_req_author
 		}
 	}
 
-	// RESTRICTION MANAGEMENT //
-/*	Spike set_no_restriction
-	Spike set_req_authorisation
-	Spike set_prohibited
-	Spike set_conditional*/
 
 	// UPDATE RESTRICTION //
 	set_no_restriction -> change_to_no_restriction:(this){
@@ -105,6 +100,7 @@ SectorManager(Process _frame, Process set_no_restriction, Process set_req_author
 			sect = getRef(&this.selected_sectors.[i])
 			if (&sect != null){
 				sect.restriction = "prohibited"
+				notify sect.start_transition
 			}
 		}
 		int list_size = $this.selected_sectors.size

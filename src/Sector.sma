@@ -54,16 +54,60 @@ Sector (Process sect_manager, string _sector_id, string _init_restriction, Proce
 		notify this.sector_poly
 	}
 
-	// tc_sect_id.output.true -> {"NEW POINT FOR SECT " + sector_id + " WITH COORD : LAT = " + new_point_lat + ", LON = " + new_point_lon =: log.input}
+	////////////////////////
+	// FSM REPRESENTATION //
+	////////////////////////
 
-	// MANAGE USER INTERACTIONS ON SECTOR //
-	// sector_poly.press -> {"CLICK ON SECTOR " + sector_id =: log2.input}
+	// TRANSITION MANAGEMENT //
 
-	
+	Spike start_transition
+	Spike start_transition_to_no_restrict
+
+	Int former_state_r (0)
+	Int former_state_g (0)
+	Int former_state_b (0)
+
+	Int new_state_r (0)
+	Int new_state_g (0)
+	Int new_state_b (0)
+
+	Double transi_r (0)
+	Double transi_g (0)
+	Double transi_b (0)
+
+	Double step_r (0)
+	Double step_g (0)
+	Double step_b (0)
+
+	Int steps (11)
+
+	Switch future_repr_color (no_restriction) {
+		Component no_restriction 
+		Component conditional {
+			0.0001 =: out_width.width
+			244 =: new_state_r
+			208 =: new_state_g
+			63 =: new_state_b
+		}
+		Component req_authorisation {
+			0.0001 =: out_width.width
+			230 =: new_state_r
+			126 =: new_state_g
+			34 =: new_state_b
+		}
+		Component prohibited {
+			0.0001 =: out_width.width
+			231 =: new_state_r
+			76 =: new_state_g
+			60 =: new_state_b
+		}
+	}
+
+	restriction =:> future_repr_color.state
+
 	FSM sect_repr {
 		State not_selected {
 			0.0001 =: out_width.width
-			0 =: fo.a
 			this =: sect_manager.deselection_request
 			Switch repr_auth (no_restriction) {
 				Component no_restriction {
@@ -72,33 +116,77 @@ Sector (Process sect_manager, string _sector_id, string _init_restriction, Proce
 				}
 				Component conditional {
 					0.0001 =: out_width.width
-					0 =: fo.a
-					255 =: out_color.r
-					165 =: out_color.g
-					0 =: out_color.b
+					0.15 =: fo.a
+					244 =: fc.r, former_state_r, transi_r
+					208 =: fc.g, former_state_g, transi_g
+					63 =: fc.b, former_state_b, transi_b
 				}
 				Component req_authorisation {
 					0.0001 =: out_width.width
-					0 =: fo.a
-					255 =: out_color.r
-					69 =: out_color.g
-					0 =: out_color.b
+					0.3 =: fo.a
+					230 =: fc.r, former_state_r, transi_r
+					126 =: fc.g, former_state_g, transi_g
+					34 =: fc.b, former_state_b, transi_b
 				}
 				Component prohibited {
 					0.0001 =: out_width.width
-					0.3 =: fo.a
-					255 =: fc.r
-					69 =: fc.g
-					0 =: fc.b
+					0.4 =: fo.a
+					231 =: fc.r, former_state_r, transi_r
+					76 =: fc.g, former_state_g, transi_g
+					60 =: fc.b, former_state_b, transi_b
 				}
 			}
 		}
 		State selected {
 			0.0008 =: out_width.width
-			1 =: fo.a
+			0.5 =: fo.a
 			this =: sect_manager.selection_request
 		}
+		State before_transition {
+			Timer t (0.1) // need some time to do some assignements, not the cleanest way but it works
+			// to be changed someday
+		}
+		State transition {
+			Timer timer_transition (2 * 60 * 1000)
+			Clock cl (100)
+			Int iter (0)
+
+			0.4 =: fo.a
+
+			(new_state_r - former_state_r) / steps =: step_r
+			(new_state_g - former_state_g) / steps =: step_g
+			(new_state_b - former_state_b) / steps =: step_b
+
+			Bool iter_gt_steps (0)
+
+			AssignmentSequence transi_step (1) {
+				// store color values in double
+				transi_r + step_r =: transi_r 
+				transi_g + step_g =: transi_g
+				transi_b + step_b =: transi_b
+				// and use double value for real color, avoids repetitive rounding errors that cause the color to change
+				transi_r =: fc.r 
+				transi_g =: fc.g
+				transi_b =: fc.b
+				iter + 1 =: iter
+				iter >= (steps-1) => iter_gt_steps
+			}
+
+			AssignmentSequence on_iter_gt_steps (1) {
+				- step_r =: step_r
+				- step_g =: step_g
+				- step_b =: step_b
+				0 =: iter
+			}
+
+			iter_gt_steps.true -> on_iter_gt_steps
+			cl.tick -> transi_step
+			//cl.tick -> {"BOOL = " + iter_gt_steps + " / STEP R = " + step_r + " / ITER = " + iter + + " / TRANSI R = " + transi_r + " / R = " + fc.r =: log4.input}
+		}
 		not_selected -> selected (sector_poly.press)
+		selected -> before_transition (start_transition)
+		before_transition -> transition (before_transition.t.end)
+		transition -> not_selected (transition.timer_transition.end)
 		selected -> not_selected (sector_poly.press)
 		selected -> not_selected (sect_manager.deselect_all)
 	}

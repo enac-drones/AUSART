@@ -186,7 +186,7 @@ class Sector():
 			}
 		})
 
-		response = requests.post(url, headers=headers, data=payload)
+		response = requests.put(url, headers=headers, data=payload)
 
 		if response.status_code == 204:
 			print("SECTOR %s SUCCESSFULLY UPDATED, ID = %s" % (self.name, self.uuid))

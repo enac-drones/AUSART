@@ -58,7 +58,7 @@
         {
             "type": "Polygon",
             "id":"SOUTH_FINALE_EXTENDED",
-            "restriction":"prohibited",
+            "restriction":"req_authorisation",
             "coordinates": [
                 [
                     [1.42817, 43.52061],
@@ -73,7 +73,7 @@
         {
             "type": "Polygon",
             "id":"TLS_CENTER_SOUTH",
-            "restriction":"req_authorisation",
+            "restriction":"no_restriction",
             "coordinates": [
                 [
                     [1.49388, 43.55805], 
@@ -88,7 +88,7 @@
         {
             "type": "Polygon",
             "id":"SOUTH_FINALE",
-            "restriction":"prohibited",
+            "restriction":"req_authorisation",
             "coordinates": [
                 [
                     [1.40083, 43.55999],
@@ -102,7 +102,7 @@
         {
             "type": "Polygon",
             "id":"TOURNEFEUILLE",
-            "restriction":"req_authorisation",
+            "restriction":"no_restriction",
             "coordinates": [
                 [
                     [1.40083, 43.55999],
@@ -148,7 +148,7 @@
         {
             "type": "Polygon",
             "id":"ENTREE_VFR_OUEST",
-            "restriction":"req_authorisation",
+            "restriction":"no_restriction",
             "coordinates": [
                 [
                     [1.11121, 43.66716],
@@ -166,7 +166,7 @@
         {
             "type": "Polygon",
             "id":"BLAGNAC",
-            "restriction":"prohibited",
+            "restriction":"req_authorisation",
             "coordinates": [
                 [
                     [1.37024, 43.60009], 
@@ -184,7 +184,7 @@
         {
             "type": "Polygon",
             "id":"TLS_CENTER",
-            "restriction":"req_authorisation",
+            "restriction":"no_restriction",
             "coordinates": [
                 [
                     [1.40328, 43.61613],
@@ -212,7 +212,7 @@
         {
             "type": "Polygon",
             "id":"ENTREE_VFR_NORD_EST",
-            "restriction":"req_authorisation",
+            "restriction":"no_restriction",
             "coordinates": [
                 [
                     [1.38600, 43.63213],
@@ -227,7 +227,7 @@
         {
             "type": "Polygon",
             "id":"ENTREE_VFR_EST",
-            "restriction":"req_authorisation",
+            "restriction":"no_restriction",
             "coordinates": [
                 [
                     [1.45468, 43.66115], 
@@ -255,7 +255,7 @@
         {
             "type": "Polygon",
             "id":"ENTREE_VFR_NORD",
-            "restriction":"req_authorisation",
+            "restriction":"no_restriction",
             "coordinates": [
                 [
                     [1.39946, 43.66741],
@@ -271,7 +271,7 @@
         {
             "type": "Polygon",
             "id":"GARONNE_NORTH_1",
-            "restriction":"req_authorisation",
+            "restriction":"no_restriction",
             "coordinates": [
                 [
                     [1.36384, 43.65261],
@@ -287,7 +287,7 @@
         {
             "type": "Polygon",
             "id":"FINALE_NORD",
-            "restriction":"prohibited",
+            "restriction":"req_authorisation",
             "coordinates": [
                 [
                     [1.32326, 43.64729],
@@ -301,7 +301,7 @@
         {
             "type": "Polygon",
             "id":"FINALE_EXTENDED_NORTH",
-            "restriction":"prohibited",
+            "restriction":"req_authorisation",
             "coordinates": [
                 [
                     [1.27684, 43.68006],
@@ -315,7 +315,7 @@
         {
             "type": "Polygon",
             "id":"NORTH_WEST_BLAGNAC",
-            "restriction":"req_authorisation",
+            "restriction":"no_restriction",
             "coordinates": [
                 [
                     [1.30139, 43.62413],
