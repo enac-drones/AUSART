@@ -431,9 +431,6 @@ Component root {
 					Line _ (0.83990, -43.63392, 0.76459, -43.66023)
 				}
 			}
-
-
-
 		}
 
 		//////////////////////
@@ -459,7 +456,7 @@ Component root {
 	// FIXED LAYER ON TOP //
 	////////////////////////
 
-	Dialog dialog (f, ivybus, pan_and_zoom_layer.flight_plan_manager)
+	Dialog dialog (f, ivybus, pan_and_zoom_layer.flight_plan_manager, pan_and_zoom_layer.sector_manager)
 	Button btn_no_restriction (f, "NO_RESTRICT", 20, 300)
 	btn_no_restriction.click -> set_no_restriction
 	Button btn_req_auth (f, "REQ_AUTHOR", 20, 400)

@@ -7,7 +7,7 @@ use display
 import Button
 
 _define_
-Dialog (Process frame, Process ivybus, Process flight_plan_manager) {
+Dialog (Process frame, Process ivybus, Process flight_plan_manager, Process sector_manager) {
 
 	TextPrinter log 
 	TextPrinter log2
@@ -23,9 +23,11 @@ Dialog (Process frame, Process ivybus, Process flight_plan_manager) {
 	Double x0 ($rc.x)
 	Double y0 (0)
 
-	Switch repr (idle) {
-		Component idle 
-		Component show_fp_info {
+	Spike back_to_idle_from_show_fp
+
+	FSM repr {
+		State idle 
+		State show_fp_info {
 			FillColor _ (White)
 			Text _txt_id (x0 + 50, y0 + 100, "FLIGHT PLAN ID : ")
 			Text txt_id (x0 + 50 + _txt_id.width + 10, y0 + 100, "NO FP SELECTED")
@@ -39,8 +41,11 @@ Dialog (Process frame, Process ivybus, Process flight_plan_manager) {
 			Button reject_button (frame, "REJECT_FP", x0 + 200, y0 + 220)
 			reject_button.click -> {"REJECT FP WITH ID = " + flight_plan_manager.selected_fp_id =: log2.input}
 			reject_button.click -> {"ausart_front_end REJECT_FP " + flight_plan_manager.selected_fp_id =: ivybus.out}
-
+			reject_button.click -> back_to_idle_from_show_fp
+			validate_button.click -> back_to_idle_from_show_fp
 		}
+		idle -> show_fp_info (flight_plan_manager.show_fp_info)
+		show_fp_info -> idle (back_to_idle_from_show_fp)
 	}
 
 	txt_fp_id aka repr.show_fp_info.txt_id.text
