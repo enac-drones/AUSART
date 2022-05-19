@@ -40,7 +40,9 @@ class Sector():
 		self.zone_authority_requirements_purpose = "authorization"
 		self.zone_authority_requirements_interval_before = None
 		# applicability #
-		self.permanent = "yes"
+		self.permanent = "no"
+		self.start_date_time = "2025-01-01T00:00:00.00Z"
+		self.end_date_time = "2025-01-02T00:00:00.00Z"
 		# geometry #
 		self.uom_dimensions = "FT"
 		self.lower_limit = 0
@@ -87,6 +89,8 @@ class Sector():
 			"applicability": 
 			[{
 				"permanent": self.permanent,
+				"start_date_time": self.start_date_time,
+				"end_date_time": self.end_date_time,
 			}],
 			"geometry": [{
 				"uom_dimensions": self.uom_dimensions,
@@ -158,6 +162,8 @@ class Sector():
 			"applicability": 
 			[{
 				"permanent": self.permanent,
+				"start_date_time": self.start_date_time,
+				"end_date_time": self.end_date_time,
 			}],
 			"geometry": [{
 				"uom_dimensions": self.uom_dimensions,

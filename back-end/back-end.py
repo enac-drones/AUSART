@@ -46,7 +46,7 @@ class BackEnd():
 		## INIT FUNCTIONS ##
 		self.load_sectors('../conf/areas/geojson_areas_v2.json')
 		self.log_in_to_UCIS()
-		#self.post_sectors_to_ucis()
+		self.post_sectors_to_ucis()
 
 		## SOCKETS ##
 		asyncio.run(self.thread_listen_dops())
