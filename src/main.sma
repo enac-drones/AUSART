@@ -460,9 +460,9 @@ Component root {
 	////////////////////////
 
 	Dialog dialog (f, ivybus, pan_and_zoom_layer.flight_plan_manager)
-	Button btn_no_restriction (f, "NO_RESTRICTION", 20, 300)
+	Button btn_no_restriction (f, "NO_RESTRICT", 20, 300)
 	btn_no_restriction.click -> set_no_restriction
-	Button btn_req_auth (f, "REQ_AUTHORISATION", 20, 400)
+	Button btn_req_auth (f, "REQ_AUTHOR", 20, 400)
 	btn_req_auth.click -> set_req_authorisation
 	Button btn_prohibited (f, "PROHIBITED", 20, 500)
 	btn_prohibited.click -> set_prohibited
