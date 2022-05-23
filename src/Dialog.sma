@@ -38,6 +38,7 @@ Dialog (Process frame, Process ivybus, Process flight_plan_manager, Process sect
 			Button validate_button (frame, "ACCEPT FP", x0 + 70, y0 + 220)
 			validate_button.click -> {"VALIDATE FP WITH ID = " + flight_plan_manager.selected_fp_id =: log.input}
 			validate_button.click -> {"ausart_front_end VALIDATE_FP " + flight_plan_manager.selected_fp_id =: ivybus.out}
+			validate_button.click -> flight_plan_manager.fp_auth
 			Button reject_button (frame, "REJECT_FP", x0 + 200, y0 + 220)
 			reject_button.click -> {"REJECT FP WITH ID = " + flight_plan_manager.selected_fp_id =: log2.input}
 			reject_button.click -> {"ausart_front_end REJECT_FP " + flight_plan_manager.selected_fp_id =: ivybus.out}

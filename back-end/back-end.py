@@ -66,6 +66,12 @@ class BackEnd():
 			print("NEW FP RECEIVED : ", dop_id)
 			self.add_new_fp(dop_id)
 			self.send_fp_to_front(dop_id)
+		elif message["notification_type"] == "closed":
+			print("FP CLOSED ", dop_id)
+			self.close_fp(dop_id)
+		elif message["notification_type"] == "activated":
+			print("FP ACTIVATED", dop_id)
+			self.activate_fp(dop_id)
 		else:
 			pass
 
@@ -284,6 +290,36 @@ class BackEnd():
 		sect.update_with_new_restri(new_restri, self.headers)
 
 		return
+
+
+
+	def close_fp(self, fp_id):
+
+		try:
+			flight_plan = next(fp for fp in self.flight_plans if fp.uuid == fp_id)
+		except StopIteration:
+			print("ATTEMPTING TO CLOSE UNKNOWN FP")
+			return
+
+		flight_plan.status = "closed"
+
+		msg = "ausart_back_end CLOSE_FP %s" % flight_plan.uuid
+
+
+
+	def activate_fp(self, fp_id):
+
+		try:
+			flight_plan = next(fp for fp in self.flight_plans if fp.uuid == fp_id)
+		except StopIteration:
+			print("ATTEMPTING TO ACTIVATE UNKNOWN FP")
+			return
+
+		flight_plan.status = "activated"
+
+		msg = "ausart_back_end ACTIVATE_FP %s" % flight_plan.uuid
+
+
 
 
 

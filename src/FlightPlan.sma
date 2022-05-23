@@ -43,12 +43,44 @@ import PolygonGeometry
  	_ivybus.in.new_flight_plan_section_circle[4] => new_circle_section_center_lon
  	_ivybus.in.new_flight_plan_section_circle[5] => new_circle_section_radius
 
+ 	// MANAGE FP STATUS UPDATE //
+ 	TextComparator tc_fp_close_id ("a", id)
+ 	_ivybus.in.close_fp[1] => tc_fp_close_id.left
+
+ 	TextComparator tc_fp_activate_id ("a", id)
+ 	_ivybus.in.close_fp[1] => tc_fp_activate_id
+
+ 	// MANAGE AUTH OF FP //
+ 	Bool change_fp_status_to_auth (0)
+ 	TextComparator tc_fp_auth ("a", id)
+ 	fp_manager.selected_fp_id => tc_fp_auth.left
+ 	fp_manager.fp_auth -> {tc_fp_auth.output =: change_fp_status_to_auth}
+
 	////////////////////
 	// REPRESENTATION //
 	////////////////////
 
-	FillColor fc (Yellow)
-	List geometries
+	FSM repr {
+		State req_auth {
+			FillColor fc (Yellow)
+			List geometries
+		}
+		State waiting_to_be_activated{
+			FillColor fc (LightGrey)
+			List geometries
+		}
+		State activated {
+			FillColor fc (Green)
+			List geometries
+		}
+		State closed {
+			FillColor fc (SlateGrey)
+			List geometries
+		}
+		req_auth -> waiting_to_be_activated (change_fp_status_to_auth.true)
+		waiting_to_be_activated -> activated (tc_fp_activate_id.output.true)
+		activated -> closed (tc_fp_close_id.output.true)
+	} 
 
 	//geometries.children.pressed -> {"FP WITH ID = " + id + " SELECTED " =: log2.input}
 
@@ -56,6 +88,7 @@ import PolygonGeometry
 		fp_id =: fp_manager.selected_fp_id
 		exp_start =: fp_manager.selected_fp_exp_start
 		exp_end =: fp_manager.selected_fp_exp_end
+		repr.status =: fp_manager.selected_fp_status
 	}
 
 	// KEEP ONLY MESSAGES ADRESSED TO THIS FLIGHT PLAN //
@@ -67,22 +100,40 @@ import PolygonGeometry
 
 	// ADD POLYGON_GEOMETRY TO GEOMETRIES //
 	tc_fp_id_poly.output.true -> add_new_polygon_geometry:(this){
-		addChildrenTo this.geometries {
+		addChildrenTo this.repr.req_auth.geometries {
 			PolygonGeometry p (toString(this.new_poly_section_id), toString(this.fp_id), getRef(this.ivybus))
 			p.poly.press -> {"FP WITH ID = " + this.fp_id + " SELECTED " =: this.log2.input}
 			p.poly.press -> this.assign_info
 			p.poly.press -> this.show_info
+		}
+		addChildrenTo this.repr.waiting_to_be_activated.geometries {
+			PolygonGeometry p (toString(this.new_poly_section_id), toString(this.fp_id), getRef(this.ivybus))
+		}
+		addChildrenTo this.repr.activated.geometries {
+			PolygonGeometry p (toString(this.new_poly_section_id), toString(this.fp_id), getRef(this.ivybus))
+		}
+		addChildrenTo this.repr.closed.geometries {
+			PolygonGeometry p (toString(this.new_poly_section_id), toString(this.fp_id), getRef(this.ivybus))
 		}
 	}
 	add_new_polygon_geometry~>_ivybus.in.new_flight_plan_section_polygon_point[1]
 
 	// ADD CIRCLE TO GEOMETRIES //
 	tc_fp_id_circle.output.true -> add_new_circle_geometry:(this){
-		addChildrenTo this.geometries {
+		addChildrenTo this.repr.req_auth.geometries {
 			Circle c ($this.new_circle_section_center_lon, - $this.new_circle_section_center_lat, $this.new_circle_section_radius * 0.000036)
 			c.press -> {"FP WITH ID = " + this.fp_id + " SELECTED " =: this.log2.input}
 			c.press -> this.assign_info
 			c.press -> this.show_info
+		}
+		addChildrenTo this.repr.waiting_to_be_activated.geometries {
+			Circle c ($this.new_circle_section_center_lon, - $this.new_circle_section_center_lat, $this.new_circle_section_radius * 0.000036)
+		}
+		addChildrenTo this.repr.activated.geometries {
+			Circle c ($this.new_circle_section_center_lon, - $this.new_circle_section_center_lat, $this.new_circle_section_radius * 0.000036)
+		}
+		addChildrenTo this.repr.closed.geometries {
+			Circle c ($this.new_circle_section_center_lon, - $this.new_circle_section_center_lat, $this.new_circle_section_radius * 0.000036)
 		}
 	}
  }

@@ -14,7 +14,7 @@ PolygonGeometry(string id, string fp_id, Process _ivybus) {
 	FillColor fc (Yellow)
 	Polygon poly 
 
-	"NEW POLYGON GEOMETRY WITH FP ID = " + fp_id + "AND ID = " + id =: log.input
+	//"NEW POLYGON GEOMETRY WITH FP ID = " + fp_id + "AND ID = " + id =: log.input
 
 	String new_section_fp_id ("")
 	String new_section_id ("")
@@ -35,7 +35,7 @@ PolygonGeometry(string id, string fp_id, Process _ivybus) {
 
 	tc_fp_id.output && tc_section_id.output => add_point
 
-	add_point.true -> {"ADDING POINT TO FLIGHT PLAN ; X = " + new_point_lat + " / Y = " + new_point_lon =: log2.input}
+	//add_point.true -> {"ADDING POINT TO FLIGHT PLAN ; X = " + new_point_lat + " / Y = " + new_point_lon =: log2.input}
 
 	add_point.true -> add_new_point:(this){
 		addChildrenTo this.poly {

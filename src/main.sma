@@ -120,6 +120,10 @@ Component root {
 		// ausart_back_end NEW_FP_SECTION_CIRCLE fp_id section_id center_lat center_lon radius
 		String new_flight_plan_section_polygon_point ("ausart_back_end NEW_FP_SECTION_POLYGON_POINT (\\S*) (\\S*) (\\S*) (\\S*)")
 		// ausart_back_end NEW_FP_POLY_POINT fp_id section_id point_lat point_lon
+		String close_fp ("ausart_back_end CLOSE_FP (\\S*)")
+		// ausart_back_end CLOSE_FP fp_id
+		String activate_fp ("ausart_back_end ACTIVATE_FP (\\S*)")
+		// ausart_back_end ACTIVATE_FP fp_id
 	}
 
 
