@@ -160,7 +160,7 @@ class BackEnd():
 
 				print("\nAutomatic token refresh success")
 				self.refresh_token = response.json()["refresh_token"]
-				self.token = response.json()["refresh_token"]
+				self.token = response.json()["access_token"]
 
 			else:
 
