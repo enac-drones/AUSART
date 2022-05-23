@@ -34,7 +34,7 @@ FlightPlanManager(Process _ivybus){
 
 	new_flight_plan_id -> add_new_flight_plan:(this){
 		addChildrenTo this.flight_plan_list {
-			FlightPlan fp (toString(this.new_flight_plan_id), toString(this.new_flight_plan_exp_start), toString(this.new_flight_plan_exp_end), getRef(this.ivybus), this.show_fp_info, this, this.fp_auth)
+			FlightPlan fp (toString(this.new_flight_plan_id), toString(this.new_flight_plan_exp_start), toString(this.new_flight_plan_exp_end), getRef(this.ivybus), this.show_fp_info, this)
 		}
 	}
 	add_new_flight_plan~>_ivybus.in.new_flight_plan_section_polygon[1]

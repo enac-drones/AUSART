@@ -11,10 +11,10 @@ PolygonGeometry(string id, string fp_id, Process _ivybus) {
 	TextPrinter log
 	TextPrinter log2
 
-	FillColor fc (Yellow)
+	FillColor fc (255, 255, 0)
 	Polygon poly 
 
-	//"NEW POLYGON GEOMETRY WITH FP ID = " + fp_id + "AND ID = " + id =: log.input
+	"NEW POLYGON GEOMETRY WITH FP ID = " + fp_id + "AND ID = " + id =: log.input
 
 	String new_section_fp_id ("")
 	String new_section_id ("")

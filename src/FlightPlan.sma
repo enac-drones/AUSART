@@ -12,7 +12,9 @@ import PolygonGeometry
 
  	TextPrinter log
  	TextPrinter log2
- 	TextPrinter log3 
+ 	TextPrinter log3
+ 	TextPrinter log4 
+ 	TextPrinter log5
 
  	Ref ivybus (_ivybus)
 
@@ -60,27 +62,34 @@ import PolygonGeometry
 	// REPRESENTATION //
 	////////////////////
 
-	FSM repr {
-		State req_auth {
-			FillColor fc (Yellow)
-			List geometries
-		}
+	List geometries
+
+/*	FSM repr {
+		State req_auth 
 		State waiting_to_be_activated{
-			FillColor fc (LightGrey)
-			List geometries
+			255 =: geometries.$added.fc.r
+			255 =: geometries.$added.fc.g
+			0 =: geometries.$added.fc.b
+			|-> geometries
 		}
 		State activated {
-			FillColor fc (Green)
-			List geometries
+			0 =: geometries.[1].fc.r
+			255 =: geometries.[1].fc.g
+			0 =: geometries.[1].fc.b
+			|-> geometries
 		}
 		State closed {
-			FillColor fc (SlateGrey)
-			List geometries
+			200 =: geometries.[1].fc.r
+			200 =: geometries.[1].fc.g
+			200 =: geometries.[1].fc.b
+			|-> geometries
 		}
 		req_auth -> waiting_to_be_activated (change_fp_status_to_auth.true)
 		waiting_to_be_activated -> activated (tc_fp_activate_id.output.true)
 		activated -> closed (tc_fp_close_id.output.true)
 	} 
+
+	"REPR STATE = " + repr.state =:> log4.input*/
 
 	//geometries.children.pressed -> {"FP WITH ID = " + id + " SELECTED " =: log2.input}
 
@@ -88,7 +97,7 @@ import PolygonGeometry
 		fp_id =: fp_manager.selected_fp_id
 		exp_start =: fp_manager.selected_fp_exp_start
 		exp_end =: fp_manager.selected_fp_exp_end
-		repr.status =: fp_manager.selected_fp_status
+		//repr.state =: fp_manager.selected_fp_status
 	}
 
 	// KEEP ONLY MESSAGES ADRESSED TO THIS FLIGHT PLAN //
@@ -100,33 +109,33 @@ import PolygonGeometry
 
 	// ADD POLYGON_GEOMETRY TO GEOMETRIES //
 	tc_fp_id_poly.output.true -> add_new_polygon_geometry:(this){
-		addChildrenTo this.repr.req_auth.geometries {
+		addChildrenTo this.geometries {
 			PolygonGeometry p (toString(this.new_poly_section_id), toString(this.fp_id), getRef(this.ivybus))
 			p.poly.press -> {"FP WITH ID = " + this.fp_id + " SELECTED " =: this.log2.input}
 			p.poly.press -> this.assign_info
 			p.poly.press -> this.show_info
 		}
-		addChildrenTo this.repr.waiting_to_be_activated.geometries {
-			PolygonGeometry p (toString(this.new_poly_section_id), toString(this.fp_id), getRef(this.ivybus))
+/*		addChildrenTo this.repr.waiting_to_be_activated.geometries {
+			PolygonGeometry p1 (toString(this.new_poly_section_id), toString(this.fp_id), getRef(this.ivybus))
 		}
 		addChildrenTo this.repr.activated.geometries {
-			PolygonGeometry p (toString(this.new_poly_section_id), toString(this.fp_id), getRef(this.ivybus))
+			PolygonGeometry p2 (toString(this.new_poly_section_id), toString(this.fp_id), getRef(this.ivybus))
 		}
 		addChildrenTo this.repr.closed.geometries {
-			PolygonGeometry p (toString(this.new_poly_section_id), toString(this.fp_id), getRef(this.ivybus))
-		}
+			PolygonGeometry p3 (toString(this.new_poly_section_id), toString(this.fp_id), getRef(this.ivybus))
+		}*/
 	}
 	add_new_polygon_geometry~>_ivybus.in.new_flight_plan_section_polygon_point[1]
 
 	// ADD CIRCLE TO GEOMETRIES //
 	tc_fp_id_circle.output.true -> add_new_circle_geometry:(this){
-		addChildrenTo this.repr.req_auth.geometries {
+		addChildrenTo this.geometries {
 			Circle c ($this.new_circle_section_center_lon, - $this.new_circle_section_center_lat, $this.new_circle_section_radius * 0.000036)
 			c.press -> {"FP WITH ID = " + this.fp_id + " SELECTED " =: this.log2.input}
 			c.press -> this.assign_info
 			c.press -> this.show_info
 		}
-		addChildrenTo this.repr.waiting_to_be_activated.geometries {
+/*		addChildrenTo this.repr.waiting_to_be_activated.geometries {
 			Circle c ($this.new_circle_section_center_lon, - $this.new_circle_section_center_lat, $this.new_circle_section_radius * 0.000036)
 		}
 		addChildrenTo this.repr.activated.geometries {
@@ -134,6 +143,6 @@ import PolygonGeometry
 		}
 		addChildrenTo this.repr.closed.geometries {
 			Circle c ($this.new_circle_section_center_lon, - $this.new_circle_section_center_lat, $this.new_circle_section_radius * 0.000036)
-		}
+		}*/
 	}
  }
