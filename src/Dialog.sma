@@ -11,6 +11,7 @@ Dialog (Process frame, Process ivybus, Process flight_plan_manager, Process sect
 
 	TextPrinter log 
 	TextPrinter log2
+	TextPrinter log3
 
 	Double self_width (600)
 	Double self_height ($frame.height)
@@ -25,6 +26,11 @@ Dialog (Process frame, Process ivybus, Process flight_plan_manager, Process sect
 
 	Spike back_to_idle_from_show_fp
 
+	AssignmentSequence as_test (1) {
+		"VALIDATE FP WITH ID = " + flight_plan_manager.selected_fp_id =: log.input
+		"ausart_front_end VALIDATE_FP " + flight_plan_manager.selected_fp_id =: ivybus.out
+	}
+
 	FSM repr {
 		State idle 
 		State show_fp_info {
@@ -36,9 +42,10 @@ Dialog (Process frame, Process ivybus, Process flight_plan_manager, Process sect
 			Text _txt_exp_end (x0 + 50, y0 + 160, "EXPECTED END : ")
 			Text txt_exp_end (x0 + 50 + _txt_exp_end.width + 10, y0 + 160, "NO FP SELECTED")
 			Button validate_button (frame, "ACCEPT FP", x0 + 70, y0 + 220)
-			validate_button.click -> {"VALIDATE FP WITH ID = " + flight_plan_manager.selected_fp_id =: log.input}
-			validate_button.click -> {"ausart_front_end VALIDATE_FP " + flight_plan_manager.selected_fp_id =: ivybus.out}
+/*			validate_button.click -> {"VALIDATE FP WITH ID = " + flight_plan_manager.selected_fp_id =: log.input}
+			validate_button.click -> {"ausart_front_end VALIDATE_FP " + flight_plan_manager.selected_fp_id =: ivybus.out}*/
 			//validate_button.click -> flight_plan_manager.fp_auth
+			validate_button.click -> as_test
 			Button reject_button (frame, "REJECT_FP", x0 + 200, y0 + 220)
 			reject_button.click -> {"REJECT FP WITH ID = " + flight_plan_manager.selected_fp_id =: log2.input}
 			reject_button.click -> {"ausart_front_end REJECT_FP " + flight_plan_manager.selected_fp_id =: ivybus.out}
