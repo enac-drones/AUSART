@@ -5,6 +5,9 @@ use display
 
 _define_
 Button (Process frame, string label, double x_, double y_) {
+
+  TextPrinter log 
+
   Translation t (x_, y_)
 
   /*----- interface -----*/
@@ -27,6 +30,8 @@ Button (Process frame, string label, double x_, double y_) {
     pressed->idle (r.release, click)
     pressed->idle (frame.release)
   }
+
+  fsm.state => log.input
 
   FillColor w (255, 255, 255)
   Text thisLabel (10, 10, label)
