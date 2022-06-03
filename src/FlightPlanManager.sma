@@ -17,6 +17,7 @@ FlightPlanManager(Process _ivybus){
 	List flight_plan_list
 
 	Spike fp_auth
+	Spike fp_reject
 
 	Spike show_fp_info
 	String selected_fp_id ("")
