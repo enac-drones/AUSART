@@ -58,8 +58,34 @@ Sector (Process sect_manager, string _sector_id, string _init_restriction, Proce
 	// FSM REPRESENTATION //
 	////////////////////////
 
-	// TRANSITION MANAGEMENT //
+	// COLOR CHOICE //
+	Int no_restriction_r (255)
+	Int no_restriction_g (0)
+	Int no_restriction_b (0)
 
+	Int conditional_r (255)
+	Int conditional_g (0)
+	Int conditional_b (0)
+
+	Int req_authorisation_r (255)
+	Int req_authorisation_g (0)
+	Int req_authorisation_b (0)
+
+	Int prohibited_r (0)
+	Int prohibited_g (0)
+	Int prohibited_b (0)
+
+	// WIDTH AND OPACITY //
+	Double fill_opacity_no_restriction (0.45)
+	Double fill_opacity_conditional (0.3)
+	Double fill_opacity_req_authorisation (0.15)
+	Double fill_opacity_prohibited (0)
+	Double fill_opacity_selected (0.5)
+
+	Double out_width_selected (0.0008)
+	Double out_width_not_selected (0.0001)
+
+	// TRANSITION MANAGEMENT //
 	Spike start_transition
 	Spike start_transition_to_no_restrict
 
@@ -82,24 +108,25 @@ Sector (Process sect_manager, string _sector_id, string _init_restriction, Proce
 	Int steps (11)
 
 	Switch future_repr_color (no_restriction) {
-		Component no_restriction 
+		Component no_restriction {
+			no_restriction_r =: new_state_r
+			no_restriction_g =: new_state_g
+			no_restriction_b =: new_state_b
+		}
 		Component conditional {
-			0.0001 =: out_width.width
-			244 =: new_state_r
-			208 =: new_state_g
-			63 =: new_state_b
+			conditional_r =: new_state_r
+			conditional_g =: new_state_g
+			conditional_b =: new_state_b
 		}
 		Component req_authorisation {
-			0.0001 =: out_width.width
-			230 =: new_state_r
-			126 =: new_state_g
-			34 =: new_state_b
+			req_authorisation_r =: new_state_r
+			req_authorisation_g =: new_state_g
+			req_authorisation_b =: new_state_b
 		}
 		Component prohibited {
-			0.0001 =: out_width.width
-			231 =: new_state_r
-			76 =: new_state_g
-			60 =: new_state_b
+			prohibited_r =: new_state_r
+			prohibited_g =: new_state_g
+			prohibited_b =: new_state_b
 		}
 	}
 
@@ -107,39 +134,41 @@ Sector (Process sect_manager, string _sector_id, string _init_restriction, Proce
 
 	FSM sect_repr {
 		State not_selected {
-			0.0001 =: out_width.width
 			this =: sect_manager.deselection_request
 			Switch repr_auth (no_restriction) {
 				Component no_restriction {
-					0.0001 =: out_width.width
-					0 =: fo.a
+					out_width_not_selected =: out_width.width
+					fill_opacity_no_restriction =: fo.a
+					no_restriction_r =: fc.r, former_state_r, transi_r
+					no_restriction_g =: fc.g, former_state_g, transi_g
+					no_restriction_b =: fc.b, former_state_b, transi_b
 				}
 				Component conditional {
-					0.0001 =: out_width.width
-					0.15 =: fo.a
-					244 =: fc.r, former_state_r, transi_r
-					208 =: fc.g, former_state_g, transi_g
-					63 =: fc.b, former_state_b, transi_b
+					out_width_not_selected =: out_width.width
+					fill_opacity_conditional =: fo.a
+					no_restriction_r =: fc.r, former_state_r, transi_r
+					no_restriction_g =: fc.g, former_state_g, transi_g
+					no_restriction_b =: fc.b, former_state_b, transi_b
 				}
 				Component req_authorisation {
-					0.0001 =: out_width.width
-					0.3 =: fo.a
-					230 =: fc.r, former_state_r, transi_r
-					126 =: fc.g, former_state_g, transi_g
-					34 =: fc.b, former_state_b, transi_b
+					out_width_not_selected =: out_width.width
+					fill_opacity_req_authorisation =: fo.a
+					req_authorisation_r =: fc.r, former_state_r, transi_r
+					req_authorisation_g =: fc.g, former_state_g, transi_g
+					req_authorisation_b =: fc.b, former_state_b, transi_b
 				}
 				Component prohibited {
-					0.0001 =: out_width.width
-					0.4 =: fo.a
-					231 =: fc.r, former_state_r, transi_r
-					76 =: fc.g, former_state_g, transi_g
-					60 =: fc.b, former_state_b, transi_b
+					out_width_not_selected =: out_width.width
+					fill_opacity_prohibited =: fo.a
+					prohibited_r =: fc.r, former_state_r, transi_r
+					prohibited_g =: fc.g, former_state_g, transi_g
+					prohibited_b =: fc.b, former_state_b, transi_b
 				}
 			}
 		}
 		State selected {
-			0.0008 =: out_width.width
-			0.5 =: fo.a
+			out_width_selected =: out_width.width
+			//fill_opacity_selected =: fo.a
 			this =: sect_manager.selection_request
 		}
 		State before_transition {
@@ -147,6 +176,7 @@ Sector (Process sect_manager, string _sector_id, string _init_restriction, Proce
 			// to be changed someday
 		}
 		State transition {
+			out_width_not_selected =: out_width.width
 			Timer timer_transition (2 * 60 * 1000)
 			Clock cl (100)
 			Int iter (0)
