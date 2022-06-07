@@ -322,6 +322,8 @@ class BackEnd():
 
 		msg = "ausart_back_end CLOSE_FP %s" % flight_plan.uuid
 
+		IvySendMsg(msg)
+
 
 
 	def activate_fp(self, fp_id):
@@ -336,6 +338,7 @@ class BackEnd():
 
 		msg = "ausart_back_end ACTIVATE_FP %s" % flight_plan.uuid
 
+		IvySendMsg(msg)
 
 
 

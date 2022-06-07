@@ -41,4 +41,6 @@ FlightPlanManager(Process _ivybus){
 	add_new_flight_plan~>_ivybus.in.new_flight_plan_section_polygon[1]
 	add_new_flight_plan~>_ivybus.in.new_flight_plan_section_circle[1]
 	add_new_flight_plan~>_ivybus.in.new_flight_plan_section_traj[1]
+	add_new_flight_plan~>_ivybus.in.activate_fp[1]
+	add_new_flight_plan~>_ivybus.in.close_fp[1]
 }

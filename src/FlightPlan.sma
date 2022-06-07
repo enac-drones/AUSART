@@ -58,7 +58,7 @@ import Trajectory
  	_ivybus.in.close_fp[1] => tc_fp_close_id.left
 
  	TextComparator tc_fp_activate_id ("a", id)
- 	_ivybus.in.close_fp[1] => tc_fp_activate_id
+ 	_ivybus.in.activate_fp[1] => tc_fp_activate_id.left
 
  	// MANAGE AUTH OF FP //
  	Bool change_fp_status_to_auth (0)
