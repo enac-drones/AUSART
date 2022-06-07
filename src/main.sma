@@ -120,6 +120,10 @@ Component root {
 		// ausart_back_end NEW_FP_SECTION_CIRCLE fp_id section_id center_lat center_lon radius
 		String new_flight_plan_section_polygon_point ("ausart_back_end NEW_FP_SECTION_POLYGON_POINT (\\S*) (\\S*) (\\S*) (\\S*)")
 		// ausart_back_end NEW_FP_POLY_POINT fp_id section_id point_lat point_lon
+		String new_flight_plan_section_traj ("ausart_back_end NEW_FP_SECTION_TRAJ (\\S*) (\\S*)")
+		// ausart_back_end NEW_FP_SECTION_TRAJ fp_id section_id
+		String new_flight_plan_section_traj_line ("ausart_back_end NEW_FP_SECTION_TRAJ_LINE (\\S*) (\\S*) (\\S*) (\\S*) (\\S*) (\\S*)")
+		// ausart_back_end NEW_FP_SECTION_TRAJ_POINT fp_id section_id point1_lon point1_lat point2_lon point2_lat
 		String close_fp ("ausart_back_end CLOSE_FP (\\S*)")
 		// ausart_back_end CLOSE_FP fp_id
 		String activate_fp ("ausart_back_end ACTIVATE_FP (\\S*)")
@@ -437,17 +441,17 @@ Component root {
 			}
 		}
 
-		//////////////////////
-		// AIRCRAFT MANAGER //
-		//////////////////////
-
-		AircraftManager aircraft_manager (ivybus)
-
 		////////////////////
 		// SECTOR MANAGER //
 		////////////////////
 
 		SectorManager sector_manager (f, set_no_restriction, set_req_authorisation, set_prohibited, set_conditional, ivybus)
+
+		//////////////////////
+		// AIRCRAFT MANAGER //
+		//////////////////////
+
+		AircraftManager aircraft_manager (ivybus)
 		
 		/////////////////////////
 		// FLIGHT PLAN MANAGER //

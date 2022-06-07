@@ -12,6 +12,9 @@ class Sector():
 
 	def __init__(self, _id, name, init_restriction, coords):
 
+		self.prefix_http = "https://www.ucis.ssghosting.net"
+		#self.prefix_http = "http://10.192.36.100:8080"
+
 		## INIT PARAMS ##
 		self.id = _id
 		self.uuid = None
@@ -56,7 +59,7 @@ class Sector():
 
 	def post_sector(self, headers):
 
-		url = "https://www.ucis.ssghosting.net/v1/geoawareness/uaszones"
+		url = self.prefix_http+"/v1/geoawareness/uaszones"
 
 		payload = json.dumps({
 			"name": self.name,
@@ -129,7 +132,7 @@ class Sector():
 
 		self.restriction = new_restri
 
-		url = "https://www.ucis.ssghosting.net/v1/geoawareness/uaszones/%s" % self.uuid
+		url = self.prefix_http+"/v1/geoawareness/uaszones/%s" % self.uuid
 
 		payload = json.dumps({
 			"name": self.name,

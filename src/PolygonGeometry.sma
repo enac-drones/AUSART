@@ -6,15 +6,18 @@ use display
 
 
 _define_
-PolygonGeometry(string id, string fp_id, Process _ivybus) {
+PolygonGeometry(string id, string fp_id, Process _ivybus, Process assign_info, Process show_info) {
 
 	TextPrinter log
 	TextPrinter log2
 
-	FillColor fc (255, 255, 0)
+	FillColor repr_color (255, 255, 0)
 	Polygon poly 
 
-	"NEW POLYGON GEOMETRY WITH FP ID = " + fp_id + "AND ID = " + id =: log.input
+	poly.press -> assign_info
+	poly.press -> show_info
+
+	"NEW POLYGON GEOMETRY WITH FP ID = " + fp_id + " AND ID = " + id =: log.input
 
 	String new_section_fp_id ("")
 	String new_section_id ("")

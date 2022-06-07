@@ -5,6 +5,7 @@ use display
 
 
 import PolygonGeometry
+import Trajectory
 
 
  _define_
@@ -15,6 +16,7 @@ import PolygonGeometry
  	TextPrinter log3
  	TextPrinter log4 
  	TextPrinter log5
+ 	TextPrinter log6
 
  	Ref ivybus (_ivybus)
 
@@ -26,13 +28,13 @@ import PolygonGeometry
  	String exp_end (_exp_end)
  	"NEW FLIGHT PLAN CREATED WITH ID = " + fp_id =: log.input
 
- 	// RECEIVE NEW FP POLY //
+ 	// RECEIVE SECTIONS POLY //
  	String new_poly_section_fp_id ("")
  	String new_poly_section_id ("")
  	_ivybus.in.new_flight_plan_section_polygon[1] => new_poly_section_fp_id
  	_ivybus.in.new_flight_plan_section_polygon[2] => new_poly_section_id
 
- 	// RECEIVE NEW FP CIRCLES //
+ 	// RECEIVE SECTIONS CIRCLES //
   	String new_circle_section_fp_id ("")
  	String new_circle_section_id ("")
  	Double new_circle_section_center_lat (0)
@@ -44,6 +46,12 @@ import PolygonGeometry
  	_ivybus.in.new_flight_plan_section_circle[3] => new_circle_section_center_lat
  	_ivybus.in.new_flight_plan_section_circle[4] => new_circle_section_center_lon
  	_ivybus.in.new_flight_plan_section_circle[5] => new_circle_section_radius
+
+ 	// RECEIVE SECTIONS TRAJECTORY //
+ 	String new_traj_section_fp_id ("")
+ 	String new_traj_section_id ("")
+ 	_ivybus.in.new_flight_plan_section_traj[1] => new_traj_section_fp_id
+ 	_ivybus.in.new_flight_plan_section_traj[2] => new_traj_section_id
 
  	// MANAGE FP STATUS UPDATE //
  	TextComparator tc_fp_close_id ("a", id)
@@ -62,34 +70,47 @@ import PolygonGeometry
 	// REPRESENTATION //
 	////////////////////
 
+	Int repr_r (0)
+	Int repr_g (0)
+	Int repr_b (0)
+
 	List geometries
 
-/*	FSM repr {
-		State req_auth 
+	FSM repr {
+		State req_auth {
+			255 =: repr_r
+			255 =: repr_g
+			0 =: repr_b
+		}
 		State waiting_to_be_activated{
-			255 =: geometries.$added.fc.r
-			255 =: geometries.$added.fc.g
-			0 =: geometries.$added.fc.b
-			|-> geometries
+			255 =: repr_r
+			159 =: repr_g
+			64 =: repr_b
 		}
 		State activated {
-			0 =: geometries.[1].fc.r
-			255 =: geometries.[1].fc.g
-			0 =: geometries.[1].fc.b
-			|-> geometries
+			73 =: repr_r
+			182 =: repr_g
+			117 =: repr_b
 		}
 		State closed {
-			200 =: geometries.[1].fc.r
-			200 =: geometries.[1].fc.g
-			200 =: geometries.[1].fc.b
-			|-> geometries
+			200 =: repr_r
+			200 =: repr_g
+			200 =: repr_b
 		}
 		req_auth -> waiting_to_be_activated (change_fp_status_to_auth.true)
 		waiting_to_be_activated -> activated (tc_fp_activate_id.output.true)
 		activated -> closed (tc_fp_close_id.output.true)
 	} 
 
-	"REPR STATE = " + repr.state =:> log4.input*/
+	"REPR STATE = " + repr.state =:> log4.input
+
+	repr.state -> change_repr_color:(this){
+		for (int i = 1; i <= $this.geometries.size; i++) {
+			this.geometries.[i].repr_color.r = $this.repr_r
+			this.geometries.[i].repr_color.g = $this.repr_g
+			this.geometries.[i].repr_color.b = $this.repr_b
+		}
+	}
 
 	//geometries.children.pressed -> {"FP WITH ID = " + id + " SELECTED " =: log2.input}
 
@@ -107,13 +128,17 @@ import PolygonGeometry
 	TextComparator tc_fp_id_circle (id, "")
 	new_circle_section_fp_id => tc_fp_id_circle.right
 
+	TextComparator tc_fp_id_traj (id, "")
+	new_traj_section_fp_id => tc_fp_id_traj.right
+
+
 	// ADD POLYGON_GEOMETRY TO GEOMETRIES //
 	tc_fp_id_poly.output.true -> add_new_polygon_geometry:(this){
 		addChildrenTo this.geometries {
-			PolygonGeometry p (toString(this.new_poly_section_id), toString(this.fp_id), getRef(this.ivybus))
-			p.poly.press -> {"FP WITH ID = " + this.fp_id + " SELECTED " =: this.log2.input}
+			PolygonGeometry p (toString(this.new_poly_section_id), toString(this.fp_id), getRef(this.ivybus), this.assign_info, this.show_info)
+/*			p.poly.press -> {"FP WITH ID = " + this.fp_id + " SELECTED " =: this.log2.input}
 			p.poly.press -> this.assign_info
-			p.poly.press -> this.show_info
+			p.poly.press -> this.show_info*/
 		}
 /*		addChildrenTo this.repr.waiting_to_be_activated.geometries {
 			PolygonGeometry p1 (toString(this.new_poly_section_id), toString(this.fp_id), getRef(this.ivybus))
@@ -127,7 +152,7 @@ import PolygonGeometry
 	}
 	add_new_polygon_geometry~>_ivybus.in.new_flight_plan_section_polygon_point[1]
 
-	// ADD CIRCLE TO GEOMETRIES //
+/*	// ADD CIRCLE TO GEOMETRIES //
 	tc_fp_id_circle.output.true -> add_new_circle_geometry:(this){
 		addChildrenTo this.geometries {
 			Circle c ($this.new_circle_section_center_lon, - $this.new_circle_section_center_lat, $this.new_circle_section_radius * 0.000036)
@@ -135,7 +160,7 @@ import PolygonGeometry
 			c.press -> this.assign_info
 			c.press -> this.show_info
 		}
-/*		addChildrenTo this.repr.waiting_to_be_activated.geometries {
+		addChildrenTo this.repr.waiting_to_be_activated.geometries {
 			Circle c ($this.new_circle_section_center_lon, - $this.new_circle_section_center_lat, $this.new_circle_section_radius * 0.000036)
 		}
 		addChildrenTo this.repr.activated.geometries {
@@ -143,6 +168,16 @@ import PolygonGeometry
 		}
 		addChildrenTo this.repr.closed.geometries {
 			Circle c ($this.new_circle_section_center_lon, - $this.new_circle_section_center_lat, $this.new_circle_section_radius * 0.000036)
-		}*/
+		}
+	}*/
+
+	// ADD TRAJECTORY TO GEOMETRIES //
+	tc_fp_id_traj.output.true-> add_new_traj:(this){
+		addChildrenTo this.geometries {
+			Trajectory t (toString(this.new_traj_section_id), toString(this.fp_id), getRef(this.ivybus), this.assign_info, this.show_info)
+/*			t.pressed -> {"FP WITH ID = " + this.fp_id + " SELECTED " =: this.log2.input}
+			t.pressed -> this.assign_info
+			t.pressed -> this.show_info*/
+		}
 	}
  }

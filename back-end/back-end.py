@@ -9,12 +9,14 @@ import websockets
 
 from ivy.std_api import *
 
-from shapely.geometry import Point
-from shapely.geometry import shape
-from shapely.geometry.polygon import Polygon
+# from shapely.section import Point
+# from shapely.section import shape
+# from shapely.section.polygon import Polygon
 
 from sector import Sector
 from flight_plan import FlightPlan
+from geometry import Geometry
+from trajectory import Trajectory
 
 
 class BackEnd():
@@ -23,13 +25,13 @@ class BackEnd():
 	def __init__(self):
 
 		self.client_id = 'd7d08988-97ba-44af-a7e1-afab0524510b'
-		#self.client_id = 'enac'
+		# self.client_id = 'enac'
 		self.prefix_http = "https://www.ucis.ssghosting.net" 
-		#self.prefix_http = "http://10.192.36.100:8080"
-		self.preifx_http_token = "https://www.ucis.ssghosting.net"
-		#self.preifx_http_token = "http://10.192.36.100:8090"
+		# self.prefix_http = "http://10.192.36.100:8080"
+		self.prefix_http_token = "https://www.ucis.ssghosting.net"
+		# self.prefix_http_token = "http://10.192.36.100:8090"
 		self.prefix_wss = "wss://wss.ucis.ssghosting.net"
-		#self.prefix_wss = "ws://10.192.36.100:8080/wss"
+		# self.prefix_wss = "ws://10.192.36.100:8080/wss"
 		self.username = 'cconan'
 		self.password = 'wac_2022'
 		self.token = None
@@ -99,7 +101,7 @@ class BackEnd():
 
 	def log_in_to_UCIS(self):
 		## Log in as ANSP into UCIS system ##
-		url = self.preifx_http_token+'/auth/realms/UCIS/protocol/openid-connect/token'
+		url = self.prefix_http_token+'/auth/realms/UCIS/protocol/openid-connect/token'
 
 		headers = {
 			'Content-Type': 'application/x-www-form-urlencoded',
@@ -123,7 +125,7 @@ class BackEnd():
 		#print("\nAuthentifying")
 
 		if response.status_code == 200:
-			#print("\nAuthentified successfully")
+			print("\nAuthentified successfully")
 			#print(response.text)
 			self.token = response.json()["access_token"]
 			self.refresh_token = response.json()["refresh_token"]
@@ -149,7 +151,7 @@ class BackEnd():
 	def thread_refresh(self, expires_in):
 		## Creates a new thread to auto refresh the access token ##
 
-		url = self.preifx_http_token+'/auth/realms/UCIS/protocol/openid-connect/token'
+		url = self.prefix_http_token+'/auth/realms/UCIS/protocol/openid-connect/token'
 		
 		while True:
 
@@ -248,20 +250,28 @@ class BackEnd():
 		print(msg)
 		IvySendMsg(msg)
 
-		for geometry in flight_plan.geometries:
-			if geometry.type == "circle":
-				msg = "ausart_back_end NEW_FP_SECTION_CIRCLE %s %s %s %s %s" \
-					% (fp_id, geometry.id, geometry.center_lat, geometry.center_lon, geometry.radius)
-				IvySendMsg(msg)
-			elif geometry.type == "polygon":
-				msg = "ausart_back_end NEW_FP_SECTION_POLYGON %s %s" % (fp_id, geometry.id)
-				IvySendMsg(msg)
-				for coord in geometry.coords:
-					time.sleep(0.001)
-					msg = "ausart_back_end NEW_FP_SECTION_POLYGON_POINT %s %s %s %s" \
-						% (fp_id, geometry.id, coord[1], coord[0]) 
+		for section in flight_plan.sections:
+			if isinstance(section, Geometry):
+				if section.type == "circle":
+					msg = "ausart_back_end NEW_FP_SECTION_CIRCLE %s %s %s %s %s" \
+						% (fp_id, section.id, section.center_lat, section.center_lon, section.radius)
 					IvySendMsg(msg)
-
+				elif section.type == "polygon":
+					msg = "ausart_back_end NEW_FP_SECTION_POLYGON %s %s" % (fp_id, section.id)
+					IvySendMsg(msg)
+					for coord in section.coords:
+						time.sleep(0.001)
+						msg = "ausart_back_end NEW_FP_SECTION_POLYGON_POINT %s %s %s %s" \
+							% (fp_id, section.id, coord[0], coord[1]) 
+						IvySendMsg(msg)
+			elif isinstance(section, Trajectory):
+				msg = "ausart_back_end NEW_FP_SECTION_TRAJ %s %s" % (fp_id, section.id)
+				IvySendMsg(msg)
+				for i in range(len(section.points[1:])):
+					time.sleep(0.001)
+					msg = "ausart_back_end NEW_FP_SECTION_TRAJ_LINE %s %s %s %s %s %s" \
+						% (fp_id, section.id, section.points[i-1].lon, section.points[i-1].lat, section.points[i].lon, section.points[i].lat)
+					IvySendMsg(msg)
 
 
 	def validate_flight_plan(self, agent, fp_id):
