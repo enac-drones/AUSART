@@ -9,7 +9,7 @@ import Trajectory
 
 
  _define_
- FlightPlan(string id, string _exp_start, string _exp_end, Process _ivybus, Process show_fp_info_req_auth, Process show_fp_info, Process fp_manager){
+ FlightPlan(string id, string _exp_start, string _exp_end, Process _ivybus, Process fp_manager){
 
  	TextPrinter log
  	TextPrinter log2
@@ -21,26 +21,27 @@ import Trajectory
  	Ref ivybus (_ivybus)
 
  	Spike show_info
- 	Switch status_for_dialog (filed) {
- 		Component filed {
- 			show_info -> show_fp_info_req_auth
- 		}
- 		Component approved {
- 			show_info -> show_fp_info
- 		}
- 		Component activated {
- 			show_info -> show_fp_info
- 		}
- 		Component closed {
- 			show_info -> show_fp_info
- 		}
- 	}
 
  	String fp_id (id)
  	String exp_start (_exp_start)
  	String exp_end (_exp_end)
  	String status ("filed") // filed/approved/rejected/activated/closed
  	"NEW FLIGHT PLAN CREATED WITH ID = " + fp_id =: log.input
+
+ 	Switch dialog_repr (filed) {
+ 		Component filed {
+ 			show_info -> fp_manager.show_dialog_req_auth
+ 		}
+ 		Component approved {
+ 			show_info -> fp_manager.show_dialog
+ 		}
+  		Component activated {
+ 			show_info -> fp_manager.show_dialog
+ 		}
+  		Component closed {
+ 			show_info -> fp_manager.show_dialog
+ 		}
+ 	}
 
  	// RECEIVE SECTIONS POLY //
  	String new_poly_section_fp_id ("")
@@ -91,36 +92,36 @@ import Trajectory
 	List geometries
 
 	FSM repr {
-		State req_auth {
+		State filed {
 			255 =: repr_r
 			255 =: repr_g
 			0 =: repr_b
 			"filed" =: status
-			"filed" =: status_for_dialog.state
+			"filed" =: dialog_repr.state
 		}
-		State waiting_to_be_activated{
+		State approved{
 			255 =: repr_r
 			159 =: repr_g
 			64 =: repr_b
 			"approved" =: status
-			"approved" =: status_for_dialog.state
+			"approved" =: dialog_repr.state
 		}
 		State activated {
 			73 =: repr_r
 			182 =: repr_g
 			117 =: repr_b
 			"activated" =: status
-			"activated" =: status_for_dialog.state
+			"activated" =: dialog_repr.state
 		}
 		State closed {
 			200 =: repr_r
 			200 =: repr_g
 			200 =: repr_b
 			"closed" =: status
-			"closed" =: status_for_dialog.state
+			"closed" =: dialog_repr.state
 		}
-		req_auth -> waiting_to_be_activated (change_fp_status_to_auth.true)
-		waiting_to_be_activated -> activated (tc_fp_activate_id.output.true)
+		filed -> approved (change_fp_status_to_auth.true)
+		approved -> activated (tc_fp_activate_id.output.true)
 		activated -> closed (tc_fp_close_id.output.true)
 	} 
 
@@ -140,7 +141,7 @@ import Trajectory
 		fp_id =: fp_manager.selected_fp_id
 		exp_start =: fp_manager.selected_fp_exp_start
 		exp_end =: fp_manager.selected_fp_exp_end
-		//repr.state =: fp_manager.selected_fp_status
+		repr.state =: fp_manager.selected_fp_status
 	}
 
 	// KEEP ONLY MESSAGES ADRESSED TO THIS FLIGHT PLAN //

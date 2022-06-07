@@ -26,9 +26,13 @@ Button (Process frame, string label, double x_, double y_) {
     State pressed {
       150 =: fc.r
     }
+    State transi {
+      Timer t (10)
+    }
     idle->pressed (r.press)
-    pressed->idle (r.release, click)
+    pressed->transi (r.release)
     pressed->idle (frame.release)
+    transi->idle(fsm.transi.t.end, click) // should not be necessary but button doesn't go back to idle because it get deactivated
   }
 
   fsm.state => log.input

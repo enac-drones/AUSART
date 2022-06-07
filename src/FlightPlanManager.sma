@@ -19,8 +19,9 @@ FlightPlanManager(Process _ivybus){
 	Spike fp_auth
 	Spike fp_reject
 
-	Spike show_fp_info_req_auth
-	Spike show_fp_info
+	Spike show_dialog
+	Spike show_dialog_req_auth
+
 	String selected_fp_id ("")
 	String selected_fp_exp_start ("")
 	String selected_fp_exp_end ("") 
@@ -36,7 +37,7 @@ FlightPlanManager(Process _ivybus){
 
 	new_flight_plan_id -> add_new_flight_plan:(this){
 		addChildrenTo this.flight_plan_list {
-			FlightPlan fp (toString(this.new_flight_plan_id), toString(this.new_flight_plan_exp_start), toString(this.new_flight_plan_exp_end), getRef(this.ivybus), this.show_fp_info_req_auth, this.show_fp_info, this)
+			FlightPlan fp (toString(this.new_flight_plan_id), toString(this.new_flight_plan_exp_start), toString(this.new_flight_plan_exp_end), getRef(this.ivybus), this)
 		}
 	}
 	add_new_flight_plan~>_ivybus.in.new_flight_plan_section_polygon[1]
