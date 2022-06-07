@@ -9,7 +9,7 @@ import Trajectory
 
 
  _define_
- FlightPlan(string id, string _exp_start, string _exp_end, Process _ivybus, Process show_fp_info, Process fp_manager){
+ FlightPlan(string id, string _exp_start, string _exp_end, Process _ivybus, Process show_fp_info_req_auth, Process show_fp_info, Process fp_manager){
 
  	TextPrinter log
  	TextPrinter log2
@@ -21,11 +21,25 @@ import Trajectory
  	Ref ivybus (_ivybus)
 
  	Spike show_info
- 	show_info -> show_fp_info
+ 	Switch status_for_dialog (filed) {
+ 		Component filed {
+ 			show_info -> show_fp_info_req_auth
+ 		}
+ 		Component approved {
+ 			show_info -> show_fp_info
+ 		}
+ 		Component activated {
+ 			show_info -> show_fp_info
+ 		}
+ 		Component closed {
+ 			show_info -> show_fp_info
+ 		}
+ 	}
 
  	String fp_id (id)
  	String exp_start (_exp_start)
  	String exp_end (_exp_end)
+ 	String status ("filed") // filed/approved/rejected/activated/closed
  	"NEW FLIGHT PLAN CREATED WITH ID = " + fp_id =: log.input
 
  	// RECEIVE SECTIONS POLY //
@@ -81,21 +95,29 @@ import Trajectory
 			255 =: repr_r
 			255 =: repr_g
 			0 =: repr_b
+			"filed" =: status
+			"filed" =: status_for_dialog.state
 		}
 		State waiting_to_be_activated{
 			255 =: repr_r
 			159 =: repr_g
 			64 =: repr_b
+			"approved" =: status
+			"approved" =: status_for_dialog.state
 		}
 		State activated {
 			73 =: repr_r
 			182 =: repr_g
 			117 =: repr_b
+			"activated" =: status
+			"activated" =: status_for_dialog.state
 		}
 		State closed {
 			200 =: repr_r
 			200 =: repr_g
 			200 =: repr_b
+			"closed" =: status
+			"closed" =: status_for_dialog.state
 		}
 		req_auth -> waiting_to_be_activated (change_fp_status_to_auth.true)
 		waiting_to_be_activated -> activated (tc_fp_activate_id.output.true)
@@ -136,19 +158,7 @@ import Trajectory
 	tc_fp_id_poly.output.true -> add_new_polygon_geometry:(this){
 		addChildrenTo this.geometries {
 			PolygonGeometry p (toString(this.new_poly_section_id), toString(this.fp_id), getRef(this.ivybus), this.assign_info, this.show_info)
-/*			p.poly.press -> {"FP WITH ID = " + this.fp_id + " SELECTED " =: this.log2.input}
-			p.poly.press -> this.assign_info
-			p.poly.press -> this.show_info*/
 		}
-/*		addChildrenTo this.repr.waiting_to_be_activated.geometries {
-			PolygonGeometry p1 (toString(this.new_poly_section_id), toString(this.fp_id), getRef(this.ivybus))
-		}
-		addChildrenTo this.repr.activated.geometries {
-			PolygonGeometry p2 (toString(this.new_poly_section_id), toString(this.fp_id), getRef(this.ivybus))
-		}
-		addChildrenTo this.repr.closed.geometries {
-			PolygonGeometry p3 (toString(this.new_poly_section_id), toString(this.fp_id), getRef(this.ivybus))
-		}*/
 	}
 	add_new_polygon_geometry~>_ivybus.in.new_flight_plan_section_polygon_point[1]
 
@@ -175,9 +185,6 @@ import Trajectory
 	tc_fp_id_traj.output.true-> add_new_traj:(this){
 		addChildrenTo this.geometries {
 			Trajectory t (toString(this.new_traj_section_id), toString(this.fp_id), getRef(this.ivybus), this.assign_info, this.show_info)
-/*			t.pressed -> {"FP WITH ID = " + this.fp_id + " SELECTED " =: this.log2.input}
-			t.pressed -> this.assign_info
-			t.pressed -> this.show_info*/
 		}
 	}
  }

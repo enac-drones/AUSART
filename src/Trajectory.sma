@@ -11,7 +11,10 @@ Trajectory(string id, string fp_id, Process _ivybus, Process show_info, Process 
 	TextPrinter log
 
 	OutlineColor repr_color (255, 255, 0)
-	OutlineWidth ow (0.01)
+	OutlineWidth ow (0.005)
+	//OutlineCapStyle _ (0) // 0 - butt ; 1 - round ; 2 - square 
+	OutlineJoinStyle _ (0) // 0 - miter ; 1 - round ; 2 - bevel 
+	OutlineMiterLimit _ (10)
 	List line_list
 
 	Spike pressed

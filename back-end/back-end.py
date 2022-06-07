@@ -265,12 +265,19 @@ class BackEnd():
 							% (fp_id, section.id, coord[0], coord[1]) 
 						IvySendMsg(msg)
 			elif isinstance(section, Trajectory):
-				msg = "ausart_back_end NEW_FP_SECTION_TRAJ %s %s" % (fp_id, section.id)
+				# msg = "ausart_back_end NEW_FP_SECTION_TRAJ %s %s" % (fp_id, section.id)
+				# IvySendMsg(msg)
+				# for i in range(len(section.points[1:])):
+				# 	time.sleep(0.001)
+				# 	msg = "ausart_back_end NEW_FP_SECTION_TRAJ_LINE %s %s %s %s %s %s" \
+				# 		% (fp_id, section.id, section.points[i-1].lon, section.points[i-1].lat, section.points[i].lon, section.points[i].lat)
+				# 	IvySendMsg(msg)
+				msg = "ausart_back_end NEW_FP_SECTION_POLYGON %s %s" % (fp_id, section.id)
 				IvySendMsg(msg)
-				for i in range(len(section.points[1:])):
+				for coord in section.buffer.exterior.coords:
 					time.sleep(0.001)
-					msg = "ausart_back_end NEW_FP_SECTION_TRAJ_LINE %s %s %s %s %s %s" \
-						% (fp_id, section.id, section.points[i-1].lon, section.points[i-1].lat, section.points[i].lon, section.points[i].lat)
+					msg = "ausart_back_end NEW_FP_SECTION_POLYGON_POINT %s %s %s %s" \
+						% (fp_id, section.id, coord[0], coord[1]) 
 					IvySendMsg(msg)
 
 
