@@ -12,6 +12,10 @@ PolygonGeometry(string id, string fp_id, Process _ivybus, Process assign_info, P
 	TextPrinter log2
 
 	FillColor repr_color (255, 255, 0)
+	FillOpacity fill_opacity (0.8)
+	OutlineColor outline_color (255, 255, 255)
+	OutlineOpacity outline_opacity (1)
+	OutlineWidth outline_width (0)
 	Polygon poly 
 
 	poly.press -> assign_info

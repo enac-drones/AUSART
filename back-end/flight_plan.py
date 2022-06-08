@@ -59,3 +59,17 @@ class FlightPlan():
 				trajectory = Trajectory(section_id, section)
 				self.sections.append(trajectory)
 			section_id += 1
+
+
+	def update_sections(self):
+		self.sections = []
+
+		section_id = 0
+		for section in self.geospatial_occupancy:
+			if section["geospatialOccupancyType"] == "Volume4D":
+				geometry = Geometry(section_id, section)
+				self.sections.append(geometry)
+			elif section["geospatialOccupancyType"] == "Trajectory4D":
+				trajectory = Trajectory(section_id, section)
+				self.sections.append(trajectory)
+			section_id += 1

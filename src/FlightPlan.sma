@@ -9,7 +9,7 @@ import Trajectory
 
 
  _define_
- FlightPlan(string id, string _exp_start, string _exp_end, Process _ivybus, Process fp_manager){
+ FlightPlan(string id, string _exp_start, string _exp_end, Process _ivybus, Process frame, Process fp_manager){
 
  	TextPrinter log
  	TextPrinter log2
@@ -19,6 +19,8 @@ import Trajectory
  	TextPrinter log6
 
  	Ref ivybus (_ivybus)
+
+ 	Spike deselect
 
  	Spike show_info
 
@@ -71,25 +73,40 @@ import Trajectory
  	// MANAGE FP STATUS UPDATE //
  	TextComparator tc_fp_close_id ("a", id)
  	_ivybus.in.close_fp[1] => tc_fp_close_id.left
+ 	fp_id => tc_fp_close_id.right
 
  	TextComparator tc_fp_activate_id ("a", id)
  	_ivybus.in.activate_fp[1] => tc_fp_activate_id.left
+ 	fp_id => tc_fp_activate_id.right
 
  	// MANAGE AUTH OF FP //
  	Bool change_fp_status_to_auth (0)
  	TextComparator tc_fp_auth ("a", id)
  	fp_manager.selected_fp_id => tc_fp_auth.left
+ 	fp_id => tc_fp_auth.right
  	fp_manager.fp_auth -> {tc_fp_auth.output =: change_fp_status_to_auth}
+
+ 	// UPDATE MANAGEMENT //
+ 	String update_fp_new_id ("")
+ 	_ivybus.in.update_flight_plan[2] => update_fp_new_id
+
+ 	TextComparator tc_update_fp ("a", id)
+ 	_ivybus.in.update_flight_plan[1] => tc_update_fp.left
+ 	fp_id => tc_update_fp.right
+ 	tc_update_fp.output.true -> {"UPDATING FP " + fp_id =: log2.input}
 
 	////////////////////
 	// REPRESENTATION //
 	////////////////////
 
+	// COLOR //
 	Int repr_r (0)
 	Int repr_g (0)
 	Int repr_b (0)
 
 	List geometries
+
+	"GEOMETRIES SIZE = " + geometries.size => log2.input
 
 	FSM repr {
 		State filed {
@@ -135,6 +152,55 @@ import Trajectory
 		}
 	}
 
+	// GIVE RIGHT STATUS COLOR TO NEW GEOMETRIES IF FP IS UPDATED //
+	geometries.size -> change_repr_color:(this){
+		for (int i = 1; i <= $this.geometries.size; i++) {
+			this.geometries.[i].repr_color.r = $this.repr_r
+			this.geometries.[i].repr_color.g = $this.repr_g
+			this.geometries.[i].repr_color.b = $this.repr_b
+		}
+	}
+
+	// EMPTY GEOMETRY LIST WHEN UPDATED //
+	tc_update_fp.output.true -> empty_geometries:(this){
+		for (int i = 1; i <= $this.geometries.size; i++){
+			delete this.geometries.[i]
+		}
+	}
+	// UPDATE FP_ID WHEN FP IS UPDATED //
+ 	tc_update_fp.output.true -> {update_fp_new_id =: fp_id}
+
+	// SELECTION / DESELECTION // 
+/*	Double out_width (0)
+	Double out_width_selected (0.001)
+	Double out_width_not_selected (0)
+
+	Double fill_opacity (0)
+	Double fill_opacity_selected (0.9)
+	Double fill_opacity_not_selected (0.7)
+
+	FSM select {
+		State not_selected {
+			out_width_not_selected =: out_width
+			fill_opacity_not_selected =: fill_opacity
+		}
+		State selected {
+			out_width_selected =: out_width
+			fill_opacity_selected =: fill_opacity
+		}
+		not_selected -> selected (show_info)
+		selected -> not_selected (deselect)
+	}
+
+	select.state -> change_select_repr:(this) {
+		for (int i = 1; i <= $this.geometries.size; i++) {
+			this.geometries.[i].outline_width.width = $this.out_width
+			this.geometries.[i].fill_opacity.a = $this.fill_opacity
+		}
+	}
+
+	"FP " + fp_id + " SELECT STATE CHANGE : " + select.state =: log3.input*/
+
 	//geometries.children.pressed -> {"FP WITH ID = " + id + " SELECTED " =: log2.input}
 
 	AssignmentSequence assign_info (1) {
@@ -147,12 +213,15 @@ import Trajectory
 	// KEEP ONLY MESSAGES ADRESSED TO THIS FLIGHT PLAN //
 	TextComparator tc_fp_id_poly (id, "")
 	new_poly_section_fp_id => tc_fp_id_poly.right
+	fp_id => tc_fp_id_poly.left
 
 	TextComparator tc_fp_id_circle (id, "")
 	new_circle_section_fp_id => tc_fp_id_circle.right
+	fp_id => tc_fp_id_circle.left
 
 	TextComparator tc_fp_id_traj (id, "")
 	new_traj_section_fp_id => tc_fp_id_traj.right
+	fp_id => tc_fp_id_traj.left
 
 
 	// ADD POLYGON_GEOMETRY TO GEOMETRIES //

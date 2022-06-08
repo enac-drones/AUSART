@@ -6,6 +6,7 @@ import json
 import threading
 import asyncio
 import websockets
+import re
 
 from ivy.std_api import *
 
@@ -74,7 +75,6 @@ class BackEnd():
 		if message["notification_type"] == "filed":
 			print("NEW FP RECEIVED : ", dop_id)
 			self.add_new_fp(dop_id)
-			self.send_fp_to_front(dop_id)
 		elif message["notification_type"] == "closed":
 			print("FP CLOSED ", dop_id)
 			self.close_fp(dop_id)
@@ -155,7 +155,7 @@ class BackEnd():
 		
 		while True:
 
-			time.sleep(expires_in - 50)
+			time.sleep(expires_in - 150)
 
 			data = {
 				'grant_type': 'refresh_token',
@@ -236,9 +236,21 @@ class BackEnd():
 
 		print(response.text)
 
-		flight_plan = FlightPlan(response.json()[0])
-
-		self.flight_plans.append(flight_plan)
+		resp = response.json()[0]
+		if resp["additional_info_for_atc"] is not None:
+			print("RECEIVING FP TO UPDATE")
+			print(resp["additional_info_for_atc"])
+			if re.match("^MODIF .*", resp["additional_info_for_atc"]):
+				old_fp_id = resp["additional_info_for_atc"].split(" ")[1]
+				flight_plan = next(fp for fp in self.flight_plans if str(fp.uuid) == str(old_fp_id))
+				flight_plan.geospatial_occupancy = resp["geospatial_occupancy"]
+				flight_plan.uuid = resp["uuid"]
+				flight_plan.update_sections()
+				self.update_fp_to_front(old_fp_id, flight_plan)
+		else:
+			flight_plan = FlightPlan(response.json()[0])
+			self.flight_plans.append(flight_plan)
+			self.send_fp_to_front(flight_plan.uuid)
 
 
 
@@ -347,6 +359,45 @@ class BackEnd():
 
 		IvySendMsg(msg)
 
+
+
+	def update_fp_to_front(self, old_fp_id, flight_plan):
+
+		print("UPDATING FP WITH OLD ID = %s AND NEW ID = %s" % (old_fp_id, flight_plan.uuid))
+
+		msg = "ausart_back_end UPDATE_FP %s %s" % (old_fp_id, flight_plan.uuid)
+		IvySendMsg(msg)
+
+		fp_id = flight_plan.uuid
+		for section in flight_plan.sections:
+			if isinstance(section, Geometry):
+				if section.type == "circle":
+					msg = "ausart_back_end NEW_FP_SECTION_CIRCLE %s %s %s %s %s" \
+						% (fp_id, section.id, section.center_lat, section.center_lon, section.radius)
+					IvySendMsg(msg)
+				elif section.type == "polygon":
+					msg = "ausart_back_end NEW_FP_SECTION_POLYGON %s %s" % (fp_id, section.id)
+					IvySendMsg(msg)
+					for coord in section.coords:
+						time.sleep(0.001)
+						msg = "ausart_back_end NEW_FP_SECTION_POLYGON_POINT %s %s %s %s" \
+							% (fp_id, section.id, coord[0], coord[1]) 
+						IvySendMsg(msg)
+			elif isinstance(section, Trajectory):
+				# msg = "ausart_back_end NEW_FP_SECTION_TRAJ %s %s" % (fp_id, section.id)
+				# IvySendMsg(msg)
+				# for i in range(len(section.points[1:])):
+				# 	time.sleep(0.001)
+				# 	msg = "ausart_back_end NEW_FP_SECTION_TRAJ_LINE %s %s %s %s %s %s" \
+				# 		% (fp_id, section.id, section.points[i-1].lon, section.points[i-1].lat, section.points[i].lon, section.points[i].lat)
+				# 	IvySendMsg(msg)
+				msg = "ausart_back_end NEW_FP_SECTION_POLYGON %s %s" % (fp_id, section.id)
+				IvySendMsg(msg)
+				for coord in section.buffer.exterior.coords:
+					time.sleep(0.001)
+					msg = "ausart_back_end NEW_FP_SECTION_POLYGON_POINT %s %s %s %s" \
+						% (fp_id, section.id, coord[0], coord[1]) 
+					IvySendMsg(msg)
 
 
 

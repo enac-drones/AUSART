@@ -56,6 +56,7 @@ Component root {
 
 	TextPrinter log
 	TextPrinter log2
+	TextPrinter log3
 
 	///////////
 	// FRAME //
@@ -128,6 +129,14 @@ Component root {
 		// ausart_back_end CLOSE_FP fp_id
 		String activate_fp ("ausart_back_end ACTIVATE_FP (\\S*)")
 		// ausart_back_end ACTIVATE_FP fp_id
+		String update_flight_plan ("ausart_back_end UPDATE_FP (\\S*) (\\S*)")
+		// ausart_back_end UPDATE_FP old_fp_id new_fp_id
+		String update_flight_plan_section_circle ("ausart_back_end UPDATE_FP_SECTION_CIRCLE (\\S*) (\\S*) (\\S*) (\\S*) (\\S*)")
+		// ausart_back_end UPDATE_FP_SECTION_CIRCLE new_fp_id section_id center_lat center_lon radius
+		String update_flight_plan_section_polygon ("ausart_back_end UPDATE_FP_SECTION_POLYGON (\\S*) (\\S*)")
+		// ausart_back_end UPDATE_FP_SECTION_POLYGON new_fp_id section_id
+		String update_flight_plan_section_polygon_point ("ausart_back_end UPDATE_FP_SECTION_POLYGON_POINT (\\S*) (\\S*) (\\S*) (\\S*)")
+		// ausart_back_end UPDATE_FP_SECTION_POLYGON_POINT new_fp_id section_id point_lat point_lon
 	}
 
 
@@ -457,7 +466,7 @@ Component root {
 		// FLIGHT PLAN MANAGER //
 		/////////////////////////
 
-		FlightPlanManager flight_plan_manager (ivybus)
+		FlightPlanManager flight_plan_manager (f, ivybus)
 	}
 
 	////////////////////////
