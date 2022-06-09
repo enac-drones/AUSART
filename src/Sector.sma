@@ -82,8 +82,8 @@ Sector (Process sect_manager, string _sector_id, string _init_restriction, Proce
 	Int prohibited_b (0)
 
 	// WIDTH AND OPACITY //
-	Double fill_opacity_no_restriction (0.45)
-	Double fill_opacity_conditional (0.3)
+	Double fill_opacity_no_restriction (0.4)
+	Double fill_opacity_conditional (0.4)
 	Double fill_opacity_req_authorisation (0.15)
 	Double fill_opacity_prohibited (0)
 	Double fill_opacity_selected (0.5)
