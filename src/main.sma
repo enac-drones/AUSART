@@ -112,7 +112,7 @@ Component root {
 		// ausart_back_end AREA_INIT area_id init_restriction
 		String point_area_init ("ausart_back_end POINT_AREA_INIT (\\S*) (\\S*) (\\S*)")
 		// ausart_back_end POINT_AREA_INIT area_id point_lat point_lon
-		String new_flight_plan ("ausart_back_end NEW_FP (\\S*) (\\S*) (\\S*)")
+		String new_flight_plan ("ausart_back_end NEW_FP (\\S*) (\\S*) (\\S*) (\\S*) (\\S*) (\\S*) (\\S*) (\\S*)")
 		// ausart_back_end NEW_FP fp_id exp_start exp_end
 		String new_flight_plan_section_polygon ("ausart_back_end NEW_FP_SECTION_POLYGON (\\S*) (\\S*)")
 		// ausart_back_end NEW_FP_SECTION_POLYGON fp_id section_id

@@ -49,12 +49,23 @@ Dialog (Process frame, Process ivybus, Process flight_plan_manager, Process sect
 			Text txt_exp_start (x0 + 50 + _txt_exp_start.width + 10, y0 + 130, "NO")
 			Text _txt_exp_end (x0 + 50, y0 + 160, "EXPECTED END : ")
 			Text txt_exp_end (x0 + 50 + _txt_exp_end.width + 10, y0 + 160, "NO")
-			Text _txt_status (x0 + 50, y0 + 190, "STATUS : ")
-			Text txt_status (x0 + 50 + _txt_status.width + 10, y0 + 190, "NO")
-			Button validate_button (frame, "ACCEPT FP", x0 + 70, y0 + 220)
+			Text _txt_max_alt (x0 + 50, y0 + 190, "MAX ALT : ")
+			Text txt_max_alt (x0 + 50 + _txt_max_alt.width + 10, y0 + 190, "NO")
+			Text _txt_ft (txt_max_alt.x + txt_max_alt.width + 15, y0 + 190, "ft")
+			Text _txt_operation_type (x0 + 50, y0 + 220, "OP TYPE : ")
+			Text txt_operation_type (x0 + 50 + _txt_operation_type.width + 10, y0 + 220, "NO")
+			Text _txt_operation_domain (x0 + 50, y0 + 250, "OP DOMAIN : ")
+			Text txt_operation_domain (x0 + 50 + _txt_operation_domain.width + 10, y0 + 250, "NO")
+			Text _txt_drone_class (x0 + 50, y0 + 280, "DRONE CLASS : ")
+			Text txt_drone_class (x0 + 50 + _txt_drone_class.width + 10, y0 + 280, "NO")
+			Text _txt_drone_type (x0 + 50, y0 + 310, "DRONE TYPE : ")
+			Text txt_drone_type (x0 + 50 + _txt_drone_type.width + 10, y0 + 310, "NO")
+			Text _txt_status (x0 + 50, y0 + 340, "STATUS : ")
+			Text txt_status (x0 + 50 + _txt_status.width + 10, y0 + 340, "NO")
+			Button validate_button (frame, "ACCEPT FP", x0 + 70, y0 + 370)
 			validate_button.click -> flight_plan_manager.fp_auth
 			validate_button.click -> as_validate
-			Button reject_button (frame, "REJECT_FP", x0 + 200, y0 + 220)
+			Button reject_button (frame, "REJECT_FP", x0 + 200, y0 + 370)
 			reject_button.click -> flight_plan_manager.fp_reject
 			reject_button.click -> as_reject
 			reject_button.click -> back_to_idle
@@ -68,10 +79,21 @@ Dialog (Process frame, Process ivybus, Process flight_plan_manager, Process sect
 			Text txt_exp_start (x0 + 50 + _txt_exp_start.width + 10, y0 + 130, "NO")
 			Text _txt_exp_end (x0 + 50, y0 + 160, "EXPECTED END : ")
 			Text txt_exp_end (x0 + 50 + _txt_exp_end.width + 10, y0 + 160, "NO")
-			Text _txt_status (x0 + 50, y0 + 190, "STATUS : ")
-			Text txt_status (x0 + 50 + _txt_status.width + 10, y0 + 190, "NO")
-			Button validate_button (frame, "ALLOW", x0 + 70, y0 + 220)
-			Button reject_button (frame, "DENY", x0 + 200, y0 + 220)
+			Text _txt_max_alt (x0 + 50, y0 + 190, "MAX ALT : ")
+			Text txt_max_alt (x0 + 50 + _txt_max_alt.width + 10, y0 + 190, "NO")
+			Text _txt_ft (txt_max_alt.x + txt_max_alt.width + 15, y0 + 190, "ft")
+			Text _txt_operation_type (x0 + 50, y0 + 220, "OP TYPE : ")
+			Text txt_operation_type (x0 + 50 + _txt_operation_type.width + 10, y0 + 220, "NO")
+			Text _txt_operation_domain (x0 + 50, y0 + 250, "OP DOMAIN : ")
+			Text txt_operation_domain (x0 + 50 + _txt_operation_domain.width + 10, y0 + 250, "NO")
+			Text _txt_drone_class (x0 + 50, y0 + 280, "DRONE CLASS : ")
+			Text txt_drone_class (x0 + 50 + _txt_drone_class.width + 10, y0 + 280, "NO")
+			Text _txt_drone_type (x0 + 50, y0 + 310, "DRONE TYPE : ")
+			Text txt_drone_type (x0 + 50 + _txt_drone_type.width + 10, y0 + 310, "NO")
+			Text _txt_status (x0 + 50, y0 + 340, "STATUS : ")
+			Text txt_status (x0 + 50 + _txt_status.width + 10, y0 + 340, "NO")
+			Button validate_button (frame, "ALLOW", x0 + 70, y0 + 370)
+			Button reject_button (frame, "DENY", x0 + 200, y0 + 370)
 			reject_button.click -> back_to_idle
 			validate_button.click -> back_to_idle
 		}
@@ -83,8 +105,19 @@ Dialog (Process frame, Process ivybus, Process flight_plan_manager, Process sect
 			Text txt_exp_start (x0 + 50 + _txt_exp_start.width + 10, y0 + 130, "NO")
 			Text _txt_exp_end (x0 + 50, y0 + 160, "EXPECTED END : ")
 			Text txt_exp_end (x0 + 50 + _txt_exp_end.width + 10, y0 + 160, "NO")
-			Text _txt_status (x0 + 50, y0 + 190, "STATUS : ")
-			Text txt_status (x0 + 50 + _txt_status.width + 10, y0 + 190, "NO")
+			Text _txt_max_alt (x0 + 50, y0 + 190, "MAX ALT : ")
+			Text txt_max_alt (x0 + 50 + _txt_max_alt.width + 10, y0 + 190, "NO")
+			Text _txt_ft (txt_max_alt.x + txt_max_alt.width + 15, y0 + 190, "ft")
+			Text _txt_operation_type (x0 + 50, y0 + 220, "OP TYPE : ")
+			Text txt_operation_type (x0 + 50 + _txt_operation_type.width + 10, y0 + 220, "NO")
+			Text _txt_operation_domain (x0 + 50, y0 + 250, "OP DOMAIN : ")
+			Text txt_operation_domain (x0 + 50 + _txt_operation_domain.width + 10, y0 + 250, "NO")
+			Text _txt_drone_class (x0 + 50, y0 + 280, "DRONE CLASS : ")
+			Text txt_drone_class (x0 + 50 + _txt_drone_class.width + 10, y0 + 280, "NO")
+			Text _txt_drone_type (x0 + 50, y0 + 310, "DRONE TYPE : ")
+			Text txt_drone_type (x0 + 50 + _txt_drone_type.width + 10, y0 + 310, "NO")
+			Text _txt_status (x0 + 50, y0 + 340, "STATUS : ")
+			Text txt_status (x0 + 50 + _txt_status.width + 10, y0 + 340, "NO")
 		}
 		idle -> show_fp_info_req_auth (flight_plan_manager.show_dialog_req_auth)
 		idle -> show_fp_info (flight_plan_manager.show_dialog)
@@ -101,15 +134,30 @@ Dialog (Process frame, Process ivybus, Process flight_plan_manager, Process sect
 	flight_plan_manager.selected_fp_id => repr.show_fp_info_req_auth.txt_id.text
 	flight_plan_manager.selected_fp_exp_start => repr.show_fp_info_req_auth.txt_exp_start.text
 	flight_plan_manager.selected_fp_exp_end => repr.show_fp_info_req_auth.txt_exp_end.text
+	flight_plan_manager.selected_fp_max_alt => repr.show_fp_info_req_auth.txt_max_alt.text
+	flight_plan_manager.selected_fp_operation_type => repr.show_fp_info_req_auth.txt_operation_type.text
+	flight_plan_manager.selected_fp_operation_domain => repr.show_fp_info_req_auth.txt_operation_domain.text
+	flight_plan_manager.selected_fp_drone_class => repr.show_fp_info_req_auth.txt_drone_class.text
+	flight_plan_manager.selected_fp_drone_type => repr.show_fp_info_req_auth.txt_drone_type.text
 	flight_plan_manager.selected_fp_status => repr.show_fp_info_req_auth.txt_status.text
 
 	flight_plan_manager.selected_fp_id => repr.show_fp_info.txt_id.text
 	flight_plan_manager.selected_fp_exp_start => repr.show_fp_info.txt_exp_start.text
 	flight_plan_manager.selected_fp_exp_end => repr.show_fp_info.txt_exp_end.text
+	flight_plan_manager.selected_fp_max_alt => repr.show_fp_info.txt_max_alt.text
+	flight_plan_manager.selected_fp_operation_type => repr.show_fp_info.txt_operation_type.text
+	flight_plan_manager.selected_fp_operation_domain => repr.show_fp_info.txt_operation_domain.text
+	flight_plan_manager.selected_fp_drone_class => repr.show_fp_info.txt_drone_class.text
+	flight_plan_manager.selected_fp_drone_type => repr.show_fp_info.txt_drone_type.text
 	flight_plan_manager.selected_fp_status => repr.show_fp_info.txt_status.text
 
 	flight_plan_manager.selected_fp_id => repr.show_fp_info_req_activate.txt_id.text
 	flight_plan_manager.selected_fp_exp_start => repr.show_fp_info_req_activate.txt_exp_start.text
 	flight_plan_manager.selected_fp_exp_end => repr.show_fp_info_req_activate.txt_exp_end.text
+	flight_plan_manager.selected_fp_max_alt => repr.show_fp_info_req_activate.txt_max_alt.text
+	flight_plan_manager.selected_fp_operation_type => repr.show_fp_info_req_activate.txt_operation_type.text
+	flight_plan_manager.selected_fp_operation_domain => repr.show_fp_info_req_activate.txt_operation_domain.text
+	flight_plan_manager.selected_fp_drone_class => repr.show_fp_info_req_activate.txt_drone_class.text
+	flight_plan_manager.selected_fp_drone_type => repr.show_fp_info_req_activate.txt_drone_type.text
 	flight_plan_manager.selected_fp_status => repr.show_fp_info_req_activate.txt_status.text
 }

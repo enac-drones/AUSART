@@ -263,7 +263,10 @@ class BackEnd():
 
 		flight_plan = next(fp for fp in self.flight_plans if fp.uuid == fp_id)
 
-		msg = "ausart_back_end NEW_FP %s %s %s" % (fp_id, flight_plan.expected_start.replace(" ", "_"), flight_plan.expected_end.replace(" ", "_"))
+		msg = "ausart_back_end NEW_FP %s %s %s %s %s %s %s %s" %\
+			(fp_id, flight_plan.expected_start.replace(" ", "_"), flight_plan.expected_end.replace(" ", "_"), \
+			int(flight_plan.altitude_max / 0.3031), flight_plan.operation_type, flight_plan.operation_domain, \
+			flight_plan.drone_class, flight_plan.drone_type)
 		print(msg)
 		IvySendMsg(msg)
 

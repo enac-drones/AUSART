@@ -47,6 +47,11 @@ class FlightPlan():
 		except KeyError:
 			self.contingency_plan = None
 		self.metadata = json["metadata"]
+		self.operation_type = json["operation_type"]
+		self.operation_domain = json["operation_domain"]
+		self.drone_type = json["drone"]["drone_type"]
+		self.drone_class = json["drone"]["drone_class"]
+		self.altitude_max = self.geospatial_occupancy[0]["points4D"][0]["point3D"][2]
 
 		self.sections = []
 

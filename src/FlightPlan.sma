@@ -9,7 +9,7 @@ import Trajectory
 
 
  _define_
- FlightPlan(string id, string _exp_start, string _exp_end, Process _ivybus, Process frame, Process fp_manager){
+ FlightPlan(string id, string _exp_start, string _exp_end, int _max_alt, string _operation_type, string _operation_domain, string _drone_class, string _drone_type, Process _ivybus, Process frame, Process fp_manager){
 
  	TextPrinter log
  	TextPrinter log2
@@ -27,6 +27,11 @@ import Trajectory
  	String fp_id (id)
  	String exp_start (_exp_start)
  	String exp_end (_exp_end)
+ 	Int max_alt (_max_alt)
+ 	String operation_type (_operation_type)
+ 	String operation_domain (_operation_domain)
+ 	String drone_class (_drone_class)
+ 	String drone_type (_drone_type)
  	String status ("filed") // filed/approved/rejected/activated/closed
  	"NEW FLIGHT PLAN CREATED WITH ID = " + fp_id =: log.input
 
@@ -160,25 +165,28 @@ import Trajectory
 	} 
 
 	"STATE CHANGED FOR FP " + fp_id + " : NEW STATE = " + repr.state =:> log4.input
+	repr.removed -> del:(this){
+		delete this
+	}
 
 	repr.state -> keep_repr_color:(this){
 		for (int i = 1; i <= $this.geometries.size; i++) {
-			this.geometries.[i].repr_color.r = $this.repr_r
-			this.geometries.[i].repr_color.g = $this.repr_g
-			this.geometries.[i].repr_color.b = $this.repr_b
-			this.geometries.[i].fill_opacity.a = $this.fill_opacity
-			this.geometries.[i].outline_opacity.a = $this.outline_opacity
+			this.geometries.[i].buffer.repr_color.r = $this.repr_r
+			this.geometries.[i].buffer.repr_color.g = $this.repr_g
+			this.geometries.[i].buffer.repr_color.b = $this.repr_b
+			this.geometries.[i].buffer.fill_opacity.a = $this.fill_opacity
+			this.geometries.[i].buffer.outline_opacity.a = $this.outline_opacity
 		}
 	}
 
 	// GIVE RIGHT STATUS COLOR TO NEW GEOMETRIES IF FP IS UPDATED //
 	geometries.size -> change_repr_color:(this){
 		for (int i = 1; i <= $this.geometries.size; i++) {
-			this.geometries.[i].repr_color.r = $this.repr_r
-			this.geometries.[i].repr_color.g = $this.repr_g
-			this.geometries.[i].repr_color.b = $this.repr_b
-			this.geometries.[i].fill_opacity.a = $this.fill_opacity
-			this.geometries.[i].outline_opacity.a = $this.outline_opacity
+			this.geometries.[i].buffer.repr_color.r = $this.repr_r
+			this.geometries.[i].buffer.repr_color.g = $this.repr_g
+			this.geometries.[i].buffer.repr_color.b = $this.repr_b
+			this.geometries.[i].buffer.fill_opacity.a = $this.fill_opacity
+			this.geometries.[i].buffer.outline_opacity.a = $this.outline_opacity
 		}
 	}
 
@@ -228,6 +236,11 @@ import Trajectory
 		fp_id =: fp_manager.selected_fp_id
 		exp_start =: fp_manager.selected_fp_exp_start
 		exp_end =: fp_manager.selected_fp_exp_end
+		max_alt =: fp_manager.selected_fp_max_alt
+		operation_type =: fp_manager.selected_fp_operation_type
+		operation_domain =: fp_manager.selected_fp_operation_domain
+		drone_class =: fp_manager.selected_fp_drone_class
+		drone_type =: fp_manager.selected_fp_drone_type
 		repr.state =: fp_manager.selected_fp_status
 	}
 
@@ -248,7 +261,7 @@ import Trajectory
 	// ADD POLYGON_GEOMETRY TO GEOMETRIES //
 	tc_fp_id_poly.output.true -> add_new_polygon_geometry:(this){
 		addChildrenTo this.geometries {
-			PolygonGeometry p (toString(this.new_poly_section_id), toString(this.fp_id), getRef(this.ivybus), this.assign_info, this.show_info)
+			PolygonGeometry p (toString(this.new_poly_section_id), toString(this.fp_id), $this.max_alt, getRef(this.ivybus), this.assign_info, this.show_info)
 		}
 	}
 	add_new_polygon_geometry~>_ivybus.in.new_flight_plan_section_polygon_point[1]
