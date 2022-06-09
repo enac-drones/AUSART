@@ -38,7 +38,7 @@ import Trajectory
  			show_info -> fp_manager.show_dialog
  		}
   		Component activated {
- 			show_info -> fp_manager.show_dialog
+ 			show_info -> fp_manager.show_dialog_req_activate
  		}
   		Component closed {
  			show_info -> fp_manager.show_dialog

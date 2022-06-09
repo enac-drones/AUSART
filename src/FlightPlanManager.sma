@@ -22,6 +22,7 @@ FlightPlanManager(Process _frame, Process _ivybus){
 
 	Spike show_dialog
 	Spike show_dialog_req_auth
+	Spike show_dialog_req_activate
 
 	Spike deselect_all_but_selected
 
