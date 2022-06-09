@@ -14,6 +14,7 @@ Sector (Process sect_manager, string _sector_id, string _init_restriction, Proce
 	TextPrinter log4
 	TextPrinter log5
 	TextPrinter log6
+	TextPrinter log7
 
 
 	String sector_id (_sector_id)
@@ -177,7 +178,13 @@ Sector (Process sect_manager, string _sector_id, string _init_restriction, Proce
 		}
 		State transition {
 			out_width_not_selected =: out_width.width
-			Timer timer_transition (2 * 60 * 1000)
+
+			Int transi_time (20 * 1000)
+			Timer timer_transition ($transi_time)
+
+			Int elapsed_time (0)
+			Clock cl_elapsed_time (1000)
+			cl_elapsed_time.tick -> {elapsed_time + 1 =: elapsed_time}
 			Clock cl (100)
 			Int iter (0)
 
@@ -211,8 +218,21 @@ Sector (Process sect_manager, string _sector_id, string _init_restriction, Proce
 
 			iter_gt_steps.true -> on_iter_gt_steps
 			cl.tick -> transi_step
-			//cl.tick -> {"BOOL = " + iter_gt_steps + " / STEP R = " + step_r + " / ITER = " + iter + + " / TRANSI R = " + transi_r + " / R = " + fc.r =: log4.input}
-		}
+
+			Scaling size (1, 1, 0, 0)
+			// 1 / 2444.579709 =: size.sx, size.sy
+			FillColor _ (White)
+			TextAnchor _ (1)
+			Text text_timer (0, 0, "")
+			Int remaining_time (0)
+			sector_poly.bounding_box.x + sector_poly.bounding_box.width / 2 =:> text_timer.x
+			sector_poly.bounding_box.y + sector_poly.bounding_box.height / 2 =:> text_timer.y
+			transi_time / 1000 - elapsed_time => remaining_time
+			remaining_time => text_timer.text
+			text_timer.x =: size.cx
+			text_timer.y =: size.cy
+			1 / 2444.579709 =: size.sx, size.sy
+		} 
 		not_selected -> selected (sector_poly.press)
 		selected -> before_transition (start_transition)
 		before_transition -> transition (before_transition.t.end)
