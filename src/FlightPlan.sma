@@ -99,10 +99,13 @@ import Trajectory
 	// REPRESENTATION //
 	////////////////////
 
-	// COLOR //
+	// COLOR & OPACITY //
 	Int repr_r (0)
 	Int repr_g (0)
 	Int repr_b (0)
+
+	Double fill_opacity (1)
+	Double outline_opacity (1) 
 
 	List geometries
 
@@ -110,6 +113,8 @@ import Trajectory
 
 	FSM repr {
 		State filed {
+			0.8 =: fill_opacity
+			0.8 =: outline_opacity
 			255 =: repr_r
 			255 =: repr_g
 			0 =: repr_b
@@ -117,6 +122,8 @@ import Trajectory
 			"filed" =: dialog_repr.state
 		}
 		State approved{
+			0.5 =: fill_opacity
+			0.5 =: outline_opacity
 			255 =: repr_r
 			159 =: repr_g
 			64 =: repr_b
@@ -124,6 +131,8 @@ import Trajectory
 			"approved" =: dialog_repr.state
 		}
 		State activated {
+			0.8 =: fill_opacity
+			0.8 =: outline_opacity
 			73 =: repr_r
 			182 =: repr_g
 			117 =: repr_b
@@ -131,24 +140,34 @@ import Trajectory
 			"activated" =: dialog_repr.state
 		}
 		State closed {
+			0.4 =: fill_opacity
+			0.4 =: outline_opacity
 			200 =: repr_r
 			200 =: repr_g
 			200 =: repr_b
 			"closed" =: status
 			"closed" =: dialog_repr.state
+			Timer t_remove (20 * 1000) 
+		}
+		State removed {
+			0 =: fill_opacity
+			0 =: outline_opacity
 		}
 		filed -> approved (change_fp_status_to_auth.true)
 		approved -> activated (tc_fp_activate_id.output.true)
 		activated -> closed (tc_fp_close_id.output.true)
+		closed -> removed (repr.closed.t_remove.end)
 	} 
 
-	"REPR STATE = " + repr.state =:> log4.input
+	"STATE CHANGED FOR FP " + fp_id + " : NEW STATE = " + repr.state =:> log4.input
 
-	repr.state -> change_repr_color:(this){
+	repr.state -> keep_repr_color:(this){
 		for (int i = 1; i <= $this.geometries.size; i++) {
 			this.geometries.[i].repr_color.r = $this.repr_r
 			this.geometries.[i].repr_color.g = $this.repr_g
 			this.geometries.[i].repr_color.b = $this.repr_b
+			this.geometries.[i].fill_opacity.a = $this.fill_opacity
+			this.geometries.[i].outline_opacity.a = $this.outline_opacity
 		}
 	}
 
@@ -158,6 +177,8 @@ import Trajectory
 			this.geometries.[i].repr_color.r = $this.repr_r
 			this.geometries.[i].repr_color.g = $this.repr_g
 			this.geometries.[i].repr_color.b = $this.repr_b
+			this.geometries.[i].fill_opacity.a = $this.fill_opacity
+			this.geometries.[i].outline_opacity.a = $this.outline_opacity
 		}
 	}
 
