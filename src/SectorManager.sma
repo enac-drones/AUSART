@@ -8,7 +8,7 @@ import Button
 
 
 _define_
-SectorManager(Process _frame, Process set_no_restriction, Process set_req_authorisation, Process set_prohibited, Process set_conditional, Process _ivybus) {
+SectorManager(Process _frame, Process set_no_restriction, Process set_req_authorisation, Process set_prohibited, Process set_conditional, Process set_normal_conf, Process _ivybus) {
 
 	TextPrinter log
 	TextPrinter log2
@@ -137,5 +137,11 @@ SectorManager(Process _frame, Process set_no_restriction, Process set_req_author
 		}
 	}
 	set_prohibited -> deselect_all*/
+
+	set_normal_conf -> set_all_sect_normal_conf:(this){
+		for (int i = 1; i <= $this.sector_list.size; i++){
+			notify this.sector_list.[i].back_to_normal_conf
+		}
+	}
 
 }

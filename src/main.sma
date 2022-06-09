@@ -76,6 +76,7 @@ Component root {
 	Spike set_req_authorisation
 	Spike set_prohibited
 	Spike set_conditional
+	Spike set_normal_conf
 
 	////////////////
 	// BACKGROUND //
@@ -102,6 +103,9 @@ Component root {
 	////////////////
 	// IVY ACCESS //
 	////////////////
+
+	//127.255.255.255:2010
+	// 10.192.36.255:6060
 
 	IvyAccess ivybus ("127.255.255.255:2010", "AUSART_FRONT_END", "FRONT_END_READY") {
 		String area_init ("ausart_back_end AREA_INIT (\\S*) (\\S*)")
@@ -134,8 +138,8 @@ Component root {
 		// ausart_back_end UPDATE_FP_SECTION_POLYGON_POINT new_fp_id section_id point_lat point_lon
 		String new_ac ("ausart_back_end NEW_AC (\\S*) (\\S*)")
 		// ausart_back_end NEW_AC ac_id callsign
-		String update_ac ("ausart_back_end UPDATE_AC (\\S*) (\\S*) (\\S*)")
-		// ausart_back_end UPDATE_AC ac_id lat lon
+		String update_ac ("ausart_back_end UPDATE_AC (\\S*) (\\S*) (\\S*) (\\S*)")
+		// ausart_back_end UPDATE_AC ac_id lat lon alt
 		String delete_ac ("ausart_back_end DELETE_AC (\\S*)")
 		// ausart_back_end DELETE_AC ac_id
 	}
@@ -243,7 +247,7 @@ Component root {
 				}
 			}
 
-			// ZRT FRANCAZAL //
+/*			// ZRT FRANCAZAL //
 			Component r_23_francazal {
 				NoFill _
 				OutlineWidth _ (0.0005)
@@ -273,7 +277,7 @@ Component root {
 					Point _ (1.26861, -43.60361)
 					Point _ (1.33777, -43.58055)
 				}
-			}
+			}*/
 
 			// TOULOUSE URBAN AREA //
 			Component toulouse_urban_area {
@@ -455,7 +459,7 @@ Component root {
 		// SECTOR MANAGER //
 		////////////////////
 
-		SectorManager sector_manager (f, set_no_restriction, set_req_authorisation, set_prohibited, set_conditional, ivybus)
+		SectorManager sector_manager (f, set_no_restriction, set_req_authorisation, set_prohibited, set_conditional, set_normal_conf, ivybus)
 
 		//////////////////////
 		// AIRCRAFT MANAGER //
@@ -483,6 +487,8 @@ Component root {
 	btn_prohibited.click -> set_prohibited
 	Button btn_cond (f, "CONDITIONAL", 20, 600)
 	btn_cond.click -> set_conditional
+	Button btn_normal_conf (f, "NORM CONF", 20, 700)
+	btn_normal_conf.click -> set_normal_conf
 
 	// DEBUG //
 

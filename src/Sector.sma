@@ -16,11 +16,14 @@ Sector (Process sect_manager, string _sector_id, string _init_restriction, Proce
 	TextPrinter log6
 	TextPrinter log7
 
+	Spike back_to_normal_conf
 
 	String sector_id (_sector_id)
 	String restriction (_init_restriction)
+	String init_restriction (_init_restriction)
 	"NEW SECTOR CREATED : " + sector_id + " WITH RESTRICTION " + restriction =: log.input
 
+	back_to_normal_conf -> {init_restriction =: restriction}
 	restriction -> {"CHANGING RESTRICTION OF SECTOR " + sector_id + " TO " + restriction =: log6.input}
 
 	// STORE INFORMATION OF POINTS TO ADD TO SECTOR POLYGON //
@@ -35,12 +38,14 @@ Sector (Process sect_manager, string _sector_id, string _init_restriction, Proce
 	// REPRESENTATION //
 	////////////////////
 
-	FillOpacity fo (0)
-	FillColor fc (DarkSlateGrey)
-	OutlineColor out_color (210, 210, 210)
-	OutlineWidth out_width (0.0001)
+	Component poly {
+		FillOpacity fo (0)
+		FillColor fc (DarkSlateGrey)
+		OutlineColor out_color (210, 210, 210)
+		OutlineWidth out_width (0.0001)
 
-	Polygon sector_poly 
+		Polygon sector_poly 
+	}
 
 	// KEEP ONLY THE MESSAGES ADRESSED TO THIS SECTOR //
 	TextComparator tc_sect_id ("a", "b")
@@ -49,10 +54,10 @@ Sector (Process sect_manager, string _sector_id, string _init_restriction, Proce
 
 	// ADD POINTS TO POLYGON //
 	tc_sect_id.output.true -> add_new_point:(this){
-		addChildrenTo this.sector_poly {
+		addChildrenTo this.poly.sector_poly {
 			Point _ ($this.new_point_lon, - $this.new_point_lat)
 		}
-		notify this.sector_poly
+		notify this.poly.sector_poly
 	}
 
 	////////////////////////
@@ -138,37 +143,37 @@ Sector (Process sect_manager, string _sector_id, string _init_restriction, Proce
 			this =: sect_manager.deselection_request
 			Switch repr_auth (no_restriction) {
 				Component no_restriction {
-					out_width_not_selected =: out_width.width
-					fill_opacity_no_restriction =: fo.a
-					no_restriction_r =: fc.r, former_state_r, transi_r
-					no_restriction_g =: fc.g, former_state_g, transi_g
-					no_restriction_b =: fc.b, former_state_b, transi_b
+					out_width_not_selected =: poly.out_width.width
+					fill_opacity_no_restriction =: poly.fo.a
+					no_restriction_r =: poly.fc.r, former_state_r, transi_r
+					no_restriction_g =: poly.fc.g, former_state_g, transi_g
+					no_restriction_b =: poly.fc.b, former_state_b, transi_b
 				}
 				Component conditional {
-					out_width_not_selected =: out_width.width
-					fill_opacity_conditional =: fo.a
-					no_restriction_r =: fc.r, former_state_r, transi_r
-					no_restriction_g =: fc.g, former_state_g, transi_g
-					no_restriction_b =: fc.b, former_state_b, transi_b
+					out_width_not_selected =: poly.out_width.width
+					fill_opacity_conditional =: poly.fo.a
+					no_restriction_r =: poly.fc.r, former_state_r, transi_r
+					no_restriction_g =: poly.fc.g, former_state_g, transi_g
+					no_restriction_b =: poly.fc.b, former_state_b, transi_b
 				}
 				Component req_authorisation {
-					out_width_not_selected =: out_width.width
-					fill_opacity_req_authorisation =: fo.a
-					req_authorisation_r =: fc.r, former_state_r, transi_r
-					req_authorisation_g =: fc.g, former_state_g, transi_g
-					req_authorisation_b =: fc.b, former_state_b, transi_b
+					out_width_not_selected =: poly.out_width.width
+					fill_opacity_req_authorisation =: poly.fo.a
+					req_authorisation_r =: poly.fc.r, former_state_r, transi_r
+					req_authorisation_g =: poly.fc.g, former_state_g, transi_g
+					req_authorisation_b =: poly.fc.b, former_state_b, transi_b
 				}
 				Component prohibited {
-					out_width_not_selected =: out_width.width
-					fill_opacity_prohibited =: fo.a
-					prohibited_r =: fc.r, former_state_r, transi_r
-					prohibited_g =: fc.g, former_state_g, transi_g
-					prohibited_b =: fc.b, former_state_b, transi_b
+					out_width_not_selected =: poly.out_width.width
+					fill_opacity_prohibited =: poly.fo.a
+					prohibited_r =: poly.fc.r, former_state_r, transi_r
+					prohibited_g =: poly.fc.g, former_state_g, transi_g
+					prohibited_b =: poly.fc.b, former_state_b, transi_b
 				}
 			}
 		}
 		State selected {
-			out_width_selected =: out_width.width
+			out_width_selected =: poly.out_width.width
 			//fill_opacity_selected =: fo.a
 			this =: sect_manager.selection_request
 		}
@@ -177,7 +182,7 @@ Sector (Process sect_manager, string _sector_id, string _init_restriction, Proce
 			// to be changed someday
 		}
 		State transition {
-			out_width_not_selected =: out_width.width
+			out_width_not_selected =: poly.out_width.width
 
 			Int transi_time (20 * 1000)
 			Timer timer_transition ($transi_time)
@@ -188,7 +193,7 @@ Sector (Process sect_manager, string _sector_id, string _init_restriction, Proce
 			Clock cl (100)
 			Int iter (0)
 
-			0.4 =: fo.a
+			0.4 =: poly.fo.a
 
 			(new_state_r - former_state_r) / steps =: step_r
 			(new_state_g - former_state_g) / steps =: step_g
@@ -202,9 +207,9 @@ Sector (Process sect_manager, string _sector_id, string _init_restriction, Proce
 				transi_g + step_g =: transi_g
 				transi_b + step_b =: transi_b
 				// and use double value for real color, avoids repetitive rounding errors that cause the color to change
-				transi_r =: fc.r 
-				transi_g =: fc.g
-				transi_b =: fc.b
+				transi_r =: poly.fc.r 
+				transi_g =: poly.fc.g
+				transi_b =: poly.fc.b
 				iter + 1 =: iter
 				iter >= (steps-1) => iter_gt_steps
 			}
@@ -225,19 +230,19 @@ Sector (Process sect_manager, string _sector_id, string _init_restriction, Proce
 			TextAnchor _ (1)
 			Text text_timer (0, 0, "")
 			Int remaining_time (0)
-			sector_poly.bounding_box.x + sector_poly.bounding_box.width / 2 =:> text_timer.x
-			sector_poly.bounding_box.y + sector_poly.bounding_box.height / 2 =:> text_timer.y
+			poly.sector_poly.bounding_box.x + poly.sector_poly.bounding_box.width / 2 =:> text_timer.x
+			poly.sector_poly.bounding_box.y + poly.sector_poly.bounding_box.height / 2 =:> text_timer.y
 			transi_time / 1000 - elapsed_time => remaining_time
 			remaining_time => text_timer.text
 			text_timer.x =: size.cx
 			text_timer.y =: size.cy
-			1 / 2444.579709 =: size.sx, size.sy
+			1 / 2000.0 =: size.sx, size.sy
 		} 
-		not_selected -> selected (sector_poly.press)
+		not_selected -> selected (poly.sector_poly.press)
 		selected -> before_transition (start_transition)
 		before_transition -> transition (before_transition.t.end)
 		transition -> not_selected (transition.timer_transition.end)
-		selected -> not_selected (sector_poly.press)
+		selected -> not_selected (poly.sector_poly.press)
 		selected -> not_selected (sect_manager.deselect_all)
 	}
 
