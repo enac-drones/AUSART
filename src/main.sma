@@ -281,9 +281,10 @@ Component root {
 
 			// TOULOUSE URBAN AREA //
 			Component toulouse_urban_area {
-				OutlineWidth _ (0.0001)
+				OutlineWidth _ (0.001)
+				OutlineColor _ (LightGreen)
 				FillColor _ (LightGreen)
-				FillOpacity _ (0.2)
+				FillOpacity _ (0)
 				Polygon toulouse_urban_area_poly {
 					Point _ (1.42473, -43.65270)
 					Point _ (1.43314, -43.64884)
