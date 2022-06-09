@@ -285,6 +285,7 @@ Component root {
 				OutlineColor _ (LightGreen)
 				FillColor _ (LightGreen)
 				FillOpacity _ (0)
+				OutlineOpacity _ (0.5)
 				Polygon toulouse_urban_area_poly {
 					Point _ (1.42473, -43.65270)
 					Point _ (1.43314, -43.64884)
