@@ -8,6 +8,8 @@ _define_
 Aircraft(int _id, string _callsign, Process _ivybus) {
 
 	TextPrinter log
+	TextPrinter log2
+	TextPrinter log3
 
 	Int id (_id)
 	String callsign (_callsign)
@@ -16,6 +18,9 @@ Aircraft(int _id, string _callsign, Process _ivybus) {
 
 	Double lat(0)
 	Double lon(0)
+	Int alt(0)
+
+	//lon -> {"UPDATE POSITION " + lat + " " + lon =: log2.input}
 
 	Double repr_size (0)
 	1 / 2444.579709 =: repr_size
@@ -34,7 +39,9 @@ Aircraft(int _id, string _callsign, Process _ivybus) {
 		Scaling text_size (0.7, 0.7, 0, 0)
 		TextAnchor _ (1)
 		Text txt_id (0, 18, "NO ID")
-		id =:> txt_id.text
+		callsign =:> txt_id.text
+		Text txt_alt (0, 31, "")
+		alt =:> txt_alt.text
 	}
 
 	// UPDATE ACCORDING TO FLIGHT PARAMS //
@@ -42,11 +49,10 @@ Aircraft(int _id, string _callsign, Process _ivybus) {
 	id =: tc_ac_id.left
 	_ivybus.in.update_ac[1] => tc_ac_id.right
 
-	//_ivybus.in.update_ac[1] => log2.input
-
 	AssignmentSequence assign_ac_params (1){
-		_ivybus.in.update_ac[2] =: lat
-		_ivybus.in.update_ac[3] =: lon
+		_ivybus.in.update_ac[2] / 10000000 =: lat
+		_ivybus.in.update_ac[3] / 10000000 =: lon
+		(_ivybus.in.update_ac[4] / 1000) / 0.3031=: alt
 	}
 
 	tc_ac_id.output.true -> assign_ac_params
