@@ -45,6 +45,7 @@ class BackEnd():
 
 		## IVY ##
 		IvyInit("AUSART_BACK_END")
+		#IvyStart(ivybus="10.192.36.255:6060")
 		IvyStart()
 		IvyBindMsg(self.send_sectors_to_front, "FRONT_END_READY")
 		IvyBindMsg(self.validate_flight_plan, "ausart_front_end VALIDATE_FP (\\S*)")
@@ -54,8 +55,9 @@ class BackEnd():
 		IvyBindMsg(self.update_sector, "ausart_front_end SECT_RESTRICT_CHANGED (\\S*) (\\S*)")
 		# ausart_front_end SECT_RESTRICT_CHANGED sect_id new_restri
 		IvyBindMsg(self.on_intruder_received, "TOTO INTRUDER (\\S*) (\\S*) (\\S*) (\\S*) (\\S*) (\\S*) (\\S*) (\\S*) (\\S*)")
+		IvySendMsg("HELLO")
 
-		## INIT FUNCTIONS ##
+		# ## INIT FUNCTIONS ##
 		self.load_sectors('../conf/areas/geojson_areas_v2.json')
 		self.log_in_to_UCIS()
 		self.post_sectors_to_ucis()
@@ -159,23 +161,24 @@ class BackEnd():
 
 			time.sleep(expires_in - 150)
 
-			data = {
-				'grant_type': 'refresh_token',
-				'client_id': self.client_id,
-				'refresh_token': self.refresh_token
-			}
+			self.log_in_to_UCIS()
+			# data = {
+			# 	'grant_type': 'refresh_token',
+			# 	'client_id': self.client_id,
+			# 	'refresh_token': self.refresh_token
+			# }
 
-			response = requests.post(url, data=data)
+			# response = requests.post(url, data=data)
 
-			if response.status_code == 200:
+			# if response.status_code == 200:
 
-				print("\nAutomatic token refresh success")
-				self.refresh_token = response.json()["refresh_token"]
-				self.token = response.json()["access_token"]
+			# 	print("\nAutomatic token refresh success")
+			# 	self.refresh_token = response.json()["refresh_token"]
+			# 	self.token = response.json()["access_token"]
 
-			else:
+			# else:
 
-				print("\nFailed to refresh token")
+			# 	print("\nFailed to refresh token")
 
 
 
@@ -404,14 +407,20 @@ class BackEnd():
 
 
 
-	def on_intruder_received(self, id, name, lat, lon, alt, course, speed, climb, itow):
+	def on_intruder_received(self, agent, id, name, lat, lon, alt, course, speed, climb, itow):
 
-		if id is in self.known_ac:
-			msg = "ausart_back_end UPDATE_AC %s %s %s" % (id, lat, lon)
+		is_known = False
+		for known_id in self.known_ac:
+			if known_id == id:
+				is_known = True
+
+		if is_known:
+			msg = "ausart_back_end UPDATE_AC %s %s %s %s" % (id, lat, lon, alt)
 			IvySendMsg(msg)
 		else:
 			msg = "ausart_back_end NEW_AC %s %s" % (id, name)
 			IvySendMsg(msg)
+			self.known_ac.append(id)
 
 
 
