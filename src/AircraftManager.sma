@@ -4,12 +4,9 @@ use gui
 use display
 
 import AircraftDrone
+import Aircraft
 
-/*_action_
-delete_ac(Process src, Process data){
 
-}
-*/
 
 _define_
 AircraftManager (Process _ivybus) {
@@ -26,18 +23,14 @@ AircraftManager (Process _ivybus) {
 	String new_ac_callsign ("no_callsign_yet")
 
 	_ivybus.in.new_ac[1] => new_ac_id
-
-	//_ivybus.in.update_ac[1] => log.input
+	_ivybus.in.new_ac[2] => new_ac_callsign
 
 	new_ac_id -> add_new_ac:(this){
 		addChildrenTo this.aircraft_list {
-			AircraftDrone _ ($this.new_ac_id, this.new_ac_callsign, getRef(this.ivybus))
+			Aircraft _ ($this.new_ac_id, toString(this.new_ac_callsign), getRef(this.ivybus))
 		}
 	}
 	add_new_ac~>_ivybus.in.update_ac[1] // je sais pas trop pourquoi mais c'est necessaire
-
-/*	NativeAction del_ac (delete_ac, 1)
-	ListIterator list_iter (aircraft_list, del_ac, 0)*/
 
 
 }

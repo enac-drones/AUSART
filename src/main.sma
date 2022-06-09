@@ -107,12 +107,6 @@ Component root {
 		// ausart_back_end AREA_INIT area_id init_restriction
 		String point_area_init ("ausart_back_end POINT_AREA_INIT (\\S*) (\\S*) (\\S*)")
 		// ausart_back_end POINT_AREA_INIT area_id point_lat point_lon
-		// String new_ac ("ausart_back_end NEW_AC (\\S*)")
-		// ausart_back_end NEW_AC ac_id
-		// String update_ac ("ausart_back_end UPDATE_AC (\\S*) (\\S*) (\\S*) (\\S*)")
-		// ausart_back_end UPDATE_AC ac_id lat lon current_sector
-		// String delete_ac ("ausart_back_end DELETE_AC (\\S*)")
-		// ausart_back_end DELETE_AC ac_id
 		String new_flight_plan ("ausart_back_end NEW_FP (\\S*) (\\S*) (\\S*)")
 		// ausart_back_end NEW_FP fp_id exp_start exp_end
 		String new_flight_plan_section_polygon ("ausart_back_end NEW_FP_SECTION_POLYGON (\\S*) (\\S*)")
@@ -137,6 +131,12 @@ Component root {
 		// ausart_back_end UPDATE_FP_SECTION_POLYGON new_fp_id section_id
 		String update_flight_plan_section_polygon_point ("ausart_back_end UPDATE_FP_SECTION_POLYGON_POINT (\\S*) (\\S*) (\\S*) (\\S*)")
 		// ausart_back_end UPDATE_FP_SECTION_POLYGON_POINT new_fp_id section_id point_lat point_lon
+		String new_ac ("ausart_back_end NEW_AC (\\S*) (\\S*)")
+		// ausart_back_end NEW_AC ac_id callsign
+		String update_ac ("ausart_back_end UPDATE_AC (\\S*) (\\S*) (\\S*)")
+		// ausart_back_end UPDATE_AC ac_id lat lon
+		String delete_ac ("ausart_back_end DELETE_AC (\\S*)")
+		// ausart_back_end DELETE_AC ac_id
 	}
 
 

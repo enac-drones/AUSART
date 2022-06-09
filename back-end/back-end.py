@@ -41,6 +41,7 @@ class BackEnd():
 
 		self.sectors = []
 		self.flight_plans = []
+		self.known_ac = []
 
 		## IVY ##
 		IvyInit("AUSART_BACK_END")
@@ -52,6 +53,7 @@ class BackEnd():
 		# ausart_front_end REJECT_FP fp_id
 		IvyBindMsg(self.update_sector, "ausart_front_end SECT_RESTRICT_CHANGED (\\S*) (\\S*)")
 		# ausart_front_end SECT_RESTRICT_CHANGED sect_id new_restri
+		IvyBindMsg(self.on_intruder_received, "TOTO INTRUDER (\\S*) (\\S*) (\\S*) (\\S*) (\\S*) (\\S*) (\\S*) (\\S*) (\\S*)")
 
 		## INIT FUNCTIONS ##
 		self.load_sectors('../conf/areas/geojson_areas_v2.json')
@@ -398,6 +400,19 @@ class BackEnd():
 					msg = "ausart_back_end NEW_FP_SECTION_POLYGON_POINT %s %s %s %s" \
 						% (fp_id, section.id, coord[0], coord[1]) 
 					IvySendMsg(msg)
+
+
+
+
+	def on_intruder_received(self, id, name, lat, lon, alt, course, speed, climb, itow):
+
+		if id is in self.known_ac:
+			msg = "ausart_back_end UPDATE_AC %s %s %s" % (id, lat, lon)
+			IvySendMsg(msg)
+		else:
+			msg = "ausart_back_end NEW_AC %s %s" % (id, name)
+			IvySendMsg(msg)
+
 
 
 
