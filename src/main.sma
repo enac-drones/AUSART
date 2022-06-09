@@ -22,7 +22,7 @@ _native_code_
 #include <string.h>
 #include <math.h>
 #include <iostream>
-#include <proj.h>
+//#include <proj.h>
 
 char* buildPath (const char* file)
 {
@@ -35,19 +35,20 @@ char* buildPath (const char* file)
   return path;
 }
 
-void test(const double lat, const double lon, djnn::DoubleProperty* x, djnn::DoubleProperty* y)
-{
-	PJ_CONTEXT* pj_context;
-	pj_context = proj_context_create();
-  auto proj_4326_3857 = proj_create_crs_to_crs (pj_context,
-    "EPSG:4326",
-    "+proj=ortho +lat_0=43.64381 +lon_0=1.3723",
-    nullptr);
-  	auto plop = proj_trans (proj_4326_3857, PJ_FWD, proj_coord(lat, lon, 0, 0));
-    x->set_value(plop.xy.x, 1);
-    y->set_value(plop.xy.y, 1);
-}
-%}
+//void test(const double lat, const double lon, djnn::DoubleProperty* x, djnn::DoubleProperty* y)
+//{
+//	PJ_CONTEXT* pj_context;
+//	pj_context = proj_context_create();
+//  auto proj_4326_3857 = proj_create_crs_to_crs (pj_context,
+//    "EPSG:4326",
+//    "+proj=ortho +lat_0=43.64381 +lon_0=1.3723",
+//    nullptr);
+//  	auto plop = proj_trans (proj_4326_3857, PJ_FWD, proj_coord(lat, lon, 0, 0));
+//    x->set_value(plop.xy.x, 1);
+//    y->set_value(plop.xy.y, 1);
+//}
+//%}
+
 
 
 
