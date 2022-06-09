@@ -25,7 +25,7 @@ exe_dir := .
 
 # ajouté comme un cochon // demander au LII
 # LDFLAGS += -ltinyxml2
-LDFLAGS += -lproj
+# LDFLAGS += -lproj
 
 # in cookbook
 #djnn_path := ../../../djnn-cpp
