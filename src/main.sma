@@ -138,8 +138,8 @@ Component root {
 		// ausart_back_end UPDATE_FP_SECTION_POLYGON_POINT new_fp_id section_id point_lat point_lon
 		String new_ac ("ausart_back_end NEW_AC (\\S*) (\\S*)")
 		// ausart_back_end NEW_AC ac_id callsign
-		String update_ac ("ausart_back_end UPDATE_AC (\\S*) (\\S*) (\\S*) (\\S*)")
-		// ausart_back_end UPDATE_AC ac_id lat lon alt
+		String update_ac ("ausart_back_end UPDATE_AC (\\S*) (\\S*) (\\S*) (\\S*) (\\S*)")
+		// ausart_back_end UPDATE_AC ac_id lat lon alt climb
 		String delete_ac ("ausart_back_end DELETE_AC (\\S*)")
 		// ausart_back_end DELETE_AC ac_id
 	}

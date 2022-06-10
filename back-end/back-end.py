@@ -418,7 +418,7 @@ class BackEnd():
 				is_known = True
 
 		if is_known:
-			msg = "ausart_back_end UPDATE_AC %s %s %s %s" % (id, lat, lon, alt)
+			msg = "ausart_back_end UPDATE_AC %s %s %s %s %s" % (id, lat, lon, alt, climb)
 			IvySendMsg(msg)
 		else:
 			msg = "ausart_back_end NEW_AC %s %s" % (id, name)
