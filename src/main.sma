@@ -47,7 +47,7 @@ char* buildPath (const char* file)
 //    x->set_value(plop.xy.x, 1);
 //    y->set_value(plop.xy.y, 1);
 //}
-//%}
+%}
 
 
 

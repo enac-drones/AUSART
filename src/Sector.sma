@@ -184,7 +184,7 @@ Sector (Process sect_manager, string _sector_id, string _init_restriction, Proce
 		State transition {
 			out_width_not_selected =: poly.out_width.width
 
-			Int transi_time (20 * 1000)
+			Int transi_time (2 * 60 * 1000)
 			Timer timer_transition ($transi_time)
 
 			Int elapsed_time (0)

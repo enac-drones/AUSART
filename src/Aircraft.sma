@@ -10,11 +10,12 @@ Aircraft(int _id, string _callsign, Process _ivybus) {
 	TextPrinter log
 	TextPrinter log2
 	TextPrinter log3
+	TextPrinter log4
 
 	Int id (_id)
 	String callsign (_callsign)
 
-	"AC " + id + " CREATED" =: log.input
+	"AC " + callsign + " CREATED" =: log.input
 
 	Double lat(0)
 	Double lon(0)
@@ -33,7 +34,7 @@ Aircraft(int _id, string _callsign, Process _ivybus) {
 	//lon -> {"UPDATE POSITION " + lat + " " + lon =: log2.input}
 
 	Double repr_size (0)
-	1 / 2000.0 =: repr_size
+	1 / 2444.579709  =: repr_size
 
 	Component radarRepr {
 		Translation t (0, 0)
@@ -46,26 +47,29 @@ Aircraft(int _id, string _callsign, Process _ivybus) {
 		FillColor fc (250, 250, 250)
 		Circle c (0, 0, 4)
 
+		// TEXT //
+		Scaling text_size (0.7, 0.7, 0, 0)
+		TextAnchor _ (1)
+		Text txt_id (0, 18, "NO ID")
+		callsign =: txt_id.text
+		Text txt_alt (0, 31, "")
+		alt + "__" + climb =:> txt_alt.text
+
+/*		// COMETE //
 		NoFill _
 		OutlineColor _ (White)
 		OutlineWidth _ (0.5)
 		OutlineOpacity _ (1)
-		Circle c1 (0, 0, 2)
-		past_lon1 => c1.x
-		- past_lat1 => c1.y
-		Circle c2 (0, 0, 1)
-		past_lon2 => c2.x
-		- past_lat2 => c2.y
-		Circle c3 (0, 0, 0.5)
-		past_lon3 => c3.x
-		- past_lat3 => c3.y
+		Circle c1 (0, 0, 4)
+		past_lon1 - lon=> c1.cx
+		- (past_lat1 - lat) => c1.cy
+		Circle c2 (0, 0, 4)
+		past_lon2 - lon => c2.cx
+		- (past_lat2 - lat) => c2.cy
+		Circle c3 (0, 0, 4)
+		past_lon3 - lon => c3.cx
+		- (past_lat3 - lat) => c3.cy*/
 
-		Scaling text_size (0.7, 0.7, 0, 0)
-		TextAnchor _ (1)
-		Text txt_id (0, 18, "NO ID")
-		callsign =:> txt_id.text
-		Text txt_alt (0, 31, "")
-		alt + "__" + climb => txt_alt.text
 	}
 
 	// UPDATE ACCORDING TO FLIGHT PARAMS //
@@ -79,12 +83,12 @@ Aircraft(int _id, string _callsign, Process _ivybus) {
 		(_ivybus.in.update_ac[4] / 1000) / 0.3031=: alt
 		_ivybus.in.update_ac[5] / 0.3031 * 60 =: climb
 		// climb > 0 : "/\\" ? "\\/" =:> asc_or_desc
-		past_lat2 =: past_lat3
+/*		past_lat2 =: past_lat3
 		past_lat1 =: past_lat2
 		lat =: past_lat1
 		past_lon2 =: past_lon3
 		past_lon1 =: past_lon2
-		lon =: past_lon1 
+		lon =: past_lon1 */
 	}
 
 	tc_ac_id.output.true -> assign_ac_params

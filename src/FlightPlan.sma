@@ -114,7 +114,7 @@ import Trajectory
 
 	List geometries
 
-	"GEOMETRIES SIZE = " + geometries.size => log2.input
+	//"GEOMETRIES SIZE = " + geometries.size => log2.input
 
 	FSM repr {
 		State filed {

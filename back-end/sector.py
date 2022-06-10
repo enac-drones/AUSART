@@ -5,6 +5,7 @@ import requests
 import json
 
 
+WAC = False
 
 
 class Sector():
@@ -12,8 +13,10 @@ class Sector():
 
 	def __init__(self, _id, name, init_restriction, coords):
 
-		self.prefix_http = "https://www.ucis.ssghosting.net"
-		#self.prefix_http = "http://10.192.36.100:8080"
+		if WAC:
+			self.prefix_http = "http://10.192.36.100:8080"
+		else:
+			self.prefix_http = "https://www.ucis.ssghosting.net"
 
 		## INIT PARAMS ##
 		self.id = _id
@@ -44,8 +47,8 @@ class Sector():
 		self.zone_authority_requirements_interval_before = None
 		# applicability #
 		self.permanent = "no"
-		self.start_date_time = "2025-01-01T00:00:00.00Z"
-		self.end_date_time = "2025-01-02T00:00:00.00Z"
+		self.start_date_time = "2022-06-10T00:00:00.00Z"
+		self.end_date_time = "2022-06-11T00:00:00.00Z"
 		# geometry #
 		self.uom_dimensions = "FT"
 		self.lower_limit = 0

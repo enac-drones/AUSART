@@ -20,19 +20,26 @@ from geometry import Geometry
 from trajectory import Trajectory
 
 
+WAC = False
+
+
 class BackEnd():
 
 
 	def __init__(self):
 
-		self.client_id = 'd7d08988-97ba-44af-a7e1-afab0524510b'
-		# self.client_id = 'enac'
-		self.prefix_http = "https://www.ucis.ssghosting.net" 
-		# self.prefix_http = "http://10.192.36.100:8080"
-		self.prefix_http_token = "https://www.ucis.ssghosting.net"
-		# self.prefix_http_token = "http://10.192.36.100:8090"
-		self.prefix_wss = "wss://wss.ucis.ssghosting.net"
-		# self.prefix_wss = "ws://10.192.36.100:8080/wss"
+		if WAC:
+			self.client_id = 'enac'
+			self.prefix_http = "http://10.192.36.100:8080"
+			self.prefix_http_token = "http://10.192.36.100:8090"
+			self.prefix_wss = "ws://10.192.36.100:8080/wss"
+			self.ivybus = "10.192.36.255:606"
+		else:
+			self.client_id = 'd7d08988-97ba-44af-a7e1-afab0524510b'
+			self.prefix_http = "https://www.ucis.ssghosting.net" 
+			self.prefix_http_token = "https://www.ucis.ssghosting.net"
+			self.prefix_wss = "wss://wss.ucis.ssghosting.net"
+			self.ivybus = "127.255.255.255:2010"
 		self.username = 'cconan'
 		self.password = 'wac_2022'
 		self.token = None
@@ -45,8 +52,8 @@ class BackEnd():
 
 		## IVY ##
 		IvyInit("AUSART_BACK_END")
-		#IvyStart(ivybus="10.192.36.255:6060")
-		IvyStart()
+		IvyStart(ivybus=self.ivybus)
+		#IvyStart()
 		IvyBindMsg(self.send_sectors_to_front, "FRONT_END_READY")
 		IvyBindMsg(self.validate_flight_plan, "ausart_front_end VALIDATE_FP (\\S*)")
 		# ausart_front_end VALIDATE_FP fp_id

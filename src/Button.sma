@@ -35,7 +35,7 @@ Button (Process frame, string label, double x_, double y_) {
     transi->idle(fsm.transi.t.end, click) // should not be necessary but button doesn't go back to idle because it get deactivated
   }
 
-  fsm.state => log.input
+  //fsm.state => log.input
 
   FillColor w (255, 255, 255)
   Text thisLabel (10, 10, label)
