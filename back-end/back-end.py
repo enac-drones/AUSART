@@ -20,7 +20,7 @@ from geometry import Geometry
 from trajectory import Trajectory
 
 
-WAC = False
+WAC = True
 
 
 class BackEnd():

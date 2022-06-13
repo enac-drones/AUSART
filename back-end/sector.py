@@ -5,7 +5,7 @@ import requests
 import json
 
 
-WAC = False
+WAC = True
 
 
 class Sector():

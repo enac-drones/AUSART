@@ -107,7 +107,7 @@ Component root {
 	//127.255.255.255:2010
 	// 10.192.36.255:6060
 
-	IvyAccess ivybus ("127.255.255.255:2010", "AUSART_FRONT_END", "FRONT_END_READY") {
+	IvyAccess ivybus ("10.192.36.255:6060", "AUSART_FRONT_END", "FRONT_END_READY") {
 		String area_init ("ausart_back_end AREA_INIT (\\S*) (\\S*)")
 		// ausart_back_end AREA_INIT area_id init_restriction
 		String point_area_init ("ausart_back_end POINT_AREA_INIT (\\S*) (\\S*) (\\S*)")
