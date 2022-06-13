@@ -33,7 +33,7 @@ class BackEnd():
 			self.prefix_http = "http://10.192.36.100:8080"
 			self.prefix_http_token = "http://10.192.36.100:8090"
 			self.prefix_wss = "ws://10.192.36.100:8080/wss"
-			self.ivybus = "10.192.36.255:606"
+			self.ivybus = "10.192.36.255:6060"
 		else:
 			self.client_id = 'd7d08988-97ba-44af-a7e1-afab0524510b'
 			self.prefix_http = "https://www.ucis.ssghosting.net" 
