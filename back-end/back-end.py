@@ -59,21 +59,23 @@ class BackEnd():
 		# ausart_front_end VALIDATE_FP fp_id
 		IvyBindMsg(self.reject_flight_plan, "ausart_front_end REJECT_FP (\\S*)")
 		# ausart_front_end REJECT_FP fp_id
+		IvyBindMsg(self.interrupt_flight_plan, "ausart_front_end INTERRUPT_FP (\\S*)")
+		# ausart_front_end INTERRUPT_FP fp_id
 		IvyBindMsg(self.update_sector, "ausart_front_end SECT_RESTRICT_CHANGED (\\S*) (\\S*)")
 		# ausart_front_end SECT_RESTRICT_CHANGED sect_id new_restri
 		IvyBindMsg(self.on_intruder_received, "TOTO INTRUDER (\\S*) (\\S*) (\\S*) (\\S*) (\\S*) (\\S*) (\\S*) (\\S*) (\\S*)")
 		IvySendMsg("HELLO")
 
 		# ## INIT FUNCTIONS ##
-		self.load_sectors('../conf/areas/geojson_areas_v2.json')
-		self.log_in_to_UCIS()
-		self.post_sectors_to_ucis()
+		self.load_sectors('../conf/areas/geojson_areas_v3.json')
+		#self.log_in_to_UCIS()
+		#self.post_sectors_to_ucis()
 
 		## SOCKETS ##
-		asyncio.run(self.thread_listen_dops())
+		#asyncio.run(self.thread_listen_dops())
 
-		thread_notif_dops = threading.Thread(target=self.thread_listen_dops, daemon=True)
-		thread_notif_dops.start()
+		#thread_notif_dops = threading.Thread(target=self.thread_listen_dops, daemon=True)
+		#thread_notif_dops.start()
 
 
 
@@ -431,6 +433,26 @@ class BackEnd():
 			msg = "ausart_back_end NEW_AC %s %s" % (id, name)
 			IvySendMsg(msg)
 			self.known_ac.append(id)
+
+
+	def interrupt_flight_plan(self, agent, fp_id):
+
+		try:
+			flight_plan = next(fp for fp in self.flight_plans if fp.uuid == fp_id)
+		except StopIteration:
+			print("ATTEMPTING TO INTERRUPT UNKNOWN FP")
+			return
+
+		flight_plan.status = "interrupted"
+
+		print("INTERRUPTING FP WITH ID = " + fp_id)
+
+		url = self.prefix_http+"/v1/dops/close/%s" % fp_id
+
+		response = requests.put(url, headers=self.headers)
+
+		print(response)
+
 
 
 

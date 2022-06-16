@@ -19,10 +19,13 @@ FlightPlanManager(Process _frame, Process _ivybus){
 
 	Spike fp_auth
 	Spike fp_reject
+	Spike fp_activate
+	Spike fp_interrupt
 
 	Spike show_dialog
 	Spike show_dialog_req_auth
 	Spike show_dialog_req_activate
+	Spike show_dialog_activated
 
 	Spike deselect_all_but_selected
 

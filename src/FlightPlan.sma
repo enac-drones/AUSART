@@ -42,8 +42,11 @@ import Trajectory
  		Component approved {
  			show_info -> fp_manager.show_dialog
  		}
-  		Component activated {
+ 		Component req_activation {
  			show_info -> fp_manager.show_dialog_req_activate
+ 		}
+  		Component activated {
+ 			show_info -> fp_manager.show_dialog_acitvated
  		}
   		Component closed {
  			show_info -> fp_manager.show_dialog
@@ -91,6 +94,20 @@ import Trajectory
  	fp_id => tc_fp_auth.right
  	fp_manager.fp_auth -> {tc_fp_auth.output =: change_fp_status_to_auth}
 
+ 	// MANAGE ACTIVATION AUTH OF FP //
+ 	Bool change_fp_status_to_activated (0)
+ 	TextComparator tc_fp_act ("a", id)
+ 	fp_manager.selected_fp_id => tc_fp_auth.left
+ 	fp_id => tc_fp_act.right
+ 	fp_manager.fp_activate -> {tc_fp_act.output =: change_fp_status_to_activated}
+
+ 	// MANAGE CLOSURE OF FP //
+ 	Bool change_fp_status_to_closed (0)
+ 	TextComparator tc_fp_interrupt ("a", id)
+ 	fp_manager.selected_fp_id => tc_fp_interrupt.left
+ 	fp_id => tc_fp_interrupt.right
+ 	fp_manager.fp_interrupt -> {tc_fp_interrupt.output =: change_fp_status_to_closed}
+
  	// UPDATE MANAGEMENT //
  	String update_fp_new_id ("")
  	_ivybus.in.update_flight_plan[2] => update_fp_new_id
@@ -135,6 +152,15 @@ import Trajectory
 			"approved" =: status
 			"approved" =: dialog_repr.state
 		}
+		State req_activation {
+			0.8 =: fill_opacity
+			0.8 =: outline_opacity
+			73 =: repr_r
+			182 =: repr_g
+			117 =: repr_b
+			"req_activation" =: status
+			"req_activation" =: dialog_repr.state
+		}
 		State activated {
 			0.8 =: fill_opacity
 			0.8 =: outline_opacity
@@ -159,8 +185,11 @@ import Trajectory
 			0 =: outline_opacity
 		}
 		filed -> approved (change_fp_status_to_auth.true)
-		approved -> activated (tc_fp_activate_id.output.true)
+		approved -> req_activation (tc_fp_activate_id.output.true)
+		req_activation -> activated (change_fp_status_to_activated.true)
+		req_activation -> closed (tc_fp_close_id.output.true)
 		activated -> closed (tc_fp_close_id.output.true)
+		activated -> closed (change_fp_status_to_closed.true)
 		closed -> removed (repr.closed.t_remove.end)
 	} 
 
