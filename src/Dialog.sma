@@ -40,7 +40,7 @@ Dialog (Process frame, Process ivybus, Process flight_plan_manager, Process sect
 		"ausart_front_end REJECT_FP " + flight_plan_manager.selected_fp_id =: ivybus.out
 	}
 
-	AssignmentSequece as_interrupt (1) {
+	AssignmentSequence as_interrupt (1) {
 		"INTERRUPT FP WITH ID = " + flight_plan_manager.selected_fp_id =: log4.input
 		"ausart_front_end INTERRUPT_FP " + flight_plan_manager.selected_fp_id =: ivybus.out
 	}
