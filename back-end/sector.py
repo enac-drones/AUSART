@@ -5,7 +5,7 @@ import requests
 import json
 
 
-WAC = False
+WAC = True
 
 
 class Sector():
@@ -46,7 +46,7 @@ class Sector():
 		self.zone_authority_requirements_purpose = "authorization"
 		self.zone_authority_requirements_interval_before = None
 		# applicability #
-		self.permanent = "no"
+		self.permanent = "yes"
 		self.start_date_time = "2022-06-10T00:00:00.00Z"
 		self.end_date_time = "2022-06-11T00:00:00.00Z"
 		# geometry #

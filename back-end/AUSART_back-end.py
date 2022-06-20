@@ -21,7 +21,7 @@ class AUSARTBackEnd():
 	def __init__(self):
 
 		IvyInit("AUSART_BACK_END")
-		IvyStart()
+		IvyStart(ivybus="10.192.36.255:6060")
 
 		# at init, no aircrafts, they will be received from PPRZ
 		self.ac_list = []
