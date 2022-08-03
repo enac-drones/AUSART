@@ -148,7 +148,7 @@
         {
             "type": "Polygon",
             "id":"ENTREE_VFR_OUEST",
-            "restriction":"no_restriction",
+            "restriction":"req_authorisation",
             "coordinates": [
                 [
                     [1.11121, 43.66716],
@@ -212,7 +212,7 @@
         {
             "type": "Polygon",
             "id":"ENTREE_VFR_NORD_EST",
-            "restriction":"no_restriction",
+            "restriction":"req_authorisation",
             "coordinates": [
                 [
                     [1.38600, 43.63213],
@@ -227,7 +227,7 @@
         {
             "type": "Polygon",
             "id":"ENTREE_VFR_EST",
-            "restriction":"no_restriction",
+            "restriction":"req_authorisation",
             "coordinates": [
                 [
                     [1.45468, 43.66115], 
@@ -255,7 +255,7 @@
         {
             "type": "Polygon",
             "id":"ENTREE_VFR_NORD",
-            "restriction":"no_restriction",
+            "restriction":"req_authorisation",
             "coordinates": [
                 [
                     [1.39946, 43.66741],

@@ -34,7 +34,7 @@ Aircraft(int _id, string _callsign, Process _ivybus) {
 	//lon -> {"UPDATE POSITION " + lat + " " + lon =: log2.input}
 
 	Double repr_size (0)
-	1 / 2444.579709  =: repr_size
+	1 / 1700.0  =: repr_size
 
 	Component radarRepr {
 		Translation t (0, 0)
