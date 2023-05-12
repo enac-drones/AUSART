@@ -2,7 +2,7 @@ from ivy.std_api import *
 import time 
 
 IvyInit("fake intruder")
-IvyStart()
+IvyStart(ivybus="10.192.36.255:6060")
 
 lat = 437000000
 

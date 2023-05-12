@@ -14,7 +14,7 @@ class Sector():
 	def __init__(self, _id, name, init_restriction, coords):
 
 		if WAC:
-			self.prefix_http = "http://10.192.36.100:8080"
+			self.prefix_http = "http://10.192.36.80:8080"
 		else:
 			self.prefix_http = "https://www.ucis.ssghosting.net"
 
@@ -47,8 +47,8 @@ class Sector():
 		self.zone_authority_requirements_interval_before = None
 		# applicability #
 		self.permanent = "yes"
-		self.start_date_time = "2022-06-10T00:00:00.00Z"
-		self.end_date_time = "2022-06-11T00:00:00.00Z"
+		self.start_date_time = "2023-05-03T00:00:00.00Z"
+		self.end_date_time = "2023-06-11T00:00:00.00Z"
 		# geometry #
 		self.uom_dimensions = "FT"
 		self.lower_limit = 0

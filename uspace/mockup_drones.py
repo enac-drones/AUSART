@@ -9,7 +9,7 @@ import time
 
 
 IvyInit("FAKE_DRONES")
-IvyStart()
+IvyStart(ivybus="10.192.36.255:6060")
 
 lat0_1 = 43.6373444
 lon0_1 = 1.3631441
